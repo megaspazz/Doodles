@@ -1,0 +1,183 @@
+<html>
+<head>
+  <title>Spigot Visualization</title>
+  <script>
+    console.log("hi bye there go where home sweet sour power rower green red colors update more");
+
+    // Constants for indexing positions in vector.
+    let x = 0;
+    let y = 1;
+
+    function rotateVector2D(vector, theta) {
+      return [
+        vector[x] * Math.cos(theta) - vector[y] * Math.sin(theta),
+        vector[x] * Math.sin(theta) + vector[y] * Math.cos(theta)
+      ];
+    }
+
+    function addVector(u, v) {
+      let sum = [];
+      for (let i = 0; i < u.length; ++i) {
+        sum.push(u[i] + v[i]);
+      }
+      return sum;
+    }
+
+    function scaleVector(vector, scale) {
+      let next = [];
+      for (let i = 0; i < vector.length; ++i) {
+        next.push(vector[i] * scale);
+      }
+      return next;
+    }
+
+    class Canvas {
+      constructor(xMin, yMin, xMax, yMax, width, height) {
+        this.xMin = xMin;
+        this.yMin = yMin;
+        this.xMax = xMax;
+        this.yMax = yMax;
+        this.width = width;
+        this.height = height;
+
+        this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        this.svg.setAttribute("viewBox", [xMin, yMin, xMax - xMin, yMax - yMin].join(" "));
+        this.svg.setAttribute("width", width);
+        this.svg.setAttribute("height", height);
+      }
+
+      transformPoint(x, y) {
+        return [x, y];
+      }
+
+      drawPoint(cx, cy, radius, color) {
+        let pt = this.transformPoint(cx, cy);
+        // console.log(pt[0]);
+        let circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", pt[x]);
+        circle.setAttribute("cy", pt[y]);
+        circle.setAttribute("r", radius);
+        circle.setAttribute("fill", color);
+        this.svg.appendChild(circle);
+      }
+
+      drawLine(x0, y0, xf, yf, strokeWidth, color) {
+        let p0 = this.transformPoint(x0, y0);
+        let pf = this.transformPoint(xf, yf);
+        let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", p0[x]);
+        line.setAttribute("y1", p0[y]);
+        line.setAttribute("x2", pf[x]);
+        line.setAttribute("y2", pf[y]);
+        line.setAttribute("style", ["stroke-width: " + strokeWidth, "stroke: " + color].join("; "));
+        line.setAttribute("stroke-width", strokeWidth);
+        line.setAttribute("stroke", color);
+        this.svg.appendChild(line);
+      }
+    }
+
+    class WaterDroplet {
+      constructor(position, velocity) {
+        this.position = position;
+        this.velocity = velocity;
+      }
+
+      nextFrame(timeDelta) {
+        let nextPosition = addVector(this.position, scaleVector(this.velocity, timeDelta));
+        return new WaterDroplet(nextPosition, this.velocity);
+      }
+    }
+
+    class Simulation {
+      constructor(radius, angularVelocity, hoseVelocity, timeDelta) {
+        this.radius = radius;
+        this.angularVelocity = angularVelocity;
+        this.hoseVelocity = hoseVelocity;
+        this.timeDelta = timeDelta;
+        this.time = 0;
+        this.waterDroplets = [];
+      }
+
+      getAngle(time) {
+        return this.angularVelocity * time;
+      }
+
+      hosePosition(time) {
+        let theta = this.angularVelocity * time;
+        return rotateVector2D([this.radius, 0], theta);
+      }
+
+      makeWaterDroplet(time) {
+        let theta = this.getAngle(time);
+        let position = this.hosePosition(time);
+        let rotationVelocity = 2 * Math.PI * this.radius * this.angularVelocity;
+        let velocity = rotateVector2D([this.hoseVelocity, rotationVelocity], theta);
+        return new WaterDroplet(position, velocity);
+      }
+
+      addWaterDropletNow() {
+        this.waterDroplets.push(this.makeWaterDroplet(this.time));
+      }
+
+      advanceSimulation(timeDelta) {
+        let next = new Simulation(this.radius, this.angularVelocity, this.hoseVelocity, this.timeDelta);
+        for (let i = 0; i < this.waterDroplets.length; ++i) {
+          next.waterDroplets.push(this.waterDroplets[i].nextFrame(timeDelta));
+        }
+        next.time = this.time + timeDelta;
+        return next;
+      }
+
+      getSVG() {
+        let size = 10;
+        let zoomFactor = 2;
+        for (let i = 0; i < this.waterDroplets.length; ++i) {
+          while (Math.abs(this.waterDroplets[i].position[x]) > size || Math.abs(this.waterDroplets[i].position[y]) > size) {
+            size *= zoomFactor;
+          }
+        }
+        let canvas = new Canvas(-size, -size, size, size, 960, 960);
+        let hosePt = this.hosePosition(this.time);
+        canvas.drawLine(0, 0, hosePt[x], hosePt[y], size / 40, "green");
+        for (let i = 0; i < this.waterDroplets.length; ++i) {
+          canvas.drawPoint(this.waterDroplets[i].position[x], this.waterDroplets[i].position[y], size / 100, "blue");
+        }
+        return canvas.svg;
+      }
+    }
+
+    let body;
+    let timeDelta = 0.25;
+    let test = new Simulation(4, Math.PI / 50, 4, 0.1);
+    test.addWaterDropletNow();
+    window.onload = function() {
+      body = document.getElementsByTagName("body")[0];
+      let svg = test.getSVG();
+      body.appendChild(svg);
+      return;
+      console.log("it's go time!!");
+      for (let t = 0; t < 20; t += timeDelta) {
+        let svg = test.getSVG();
+        console.log(document.getElementsByTagName("body")[0]);
+        body.appendChild(svg);
+        test = test.advanceSimulation(timeDelta);
+        test.addWaterDropletNow();
+      }
+    }
+
+    document.onkeydown = function(e) {
+      if (e.keyCode == 39) {
+        test = test.advanceSimulation(timeDelta);
+        test.addWaterDropletNow();
+        let svg = test.getSVG();
+        while (body.firstChild) {
+          body.removeChild(body.firstChild);
+        }
+        body.appendChild(svg);
+      }
+    }
+  </script>
+</head>
+<body>
+</body>
+</html>
