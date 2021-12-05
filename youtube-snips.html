@@ -142,7 +142,7 @@
 	  function playNewVideo() {
 		playing = false;
 		loadSnipData();
-		history.pushState({}, "", window.location.href.split('?')[0] + "?" + snipData.video + "&start=" + snipData.start + "&duration=" + snipData.duration);
+		history.pushState({}, "", window.location.href.split('?')[0] + "?video=" + snipData.video + "&start=" + snipData.start + "&duration=" + snipData.duration);
 		console.log(player);
 		console.log(typeof player.stopVideo)
 		player.stopVideo();
