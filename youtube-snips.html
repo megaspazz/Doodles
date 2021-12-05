@@ -142,7 +142,7 @@
 	  function playNewVideo() {
 		playing = false;
 		loadSnipData();
-		history.pushState({}, "", "file:///C:/Users/Eric%20Pan/Desktop/Programs/Web/YouTubeSnips/youtube-snips.html?video=" + snipData.video + "&start=" + snipData.start + "&duration=" + snipData.duration);
+		history.pushState({}, "", window.location.href.split('?')[0] + "?" + snipData.video + "&start=" + snipData.start + "&duration=" + snipData.duration);
 		console.log(player);
 		console.log(typeof player.stopVideo)
 		player.stopVideo();
