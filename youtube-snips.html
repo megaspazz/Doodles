@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+    <div id="player"></div>
+	<p>
+		<label for="txtVideo">Video ID</label>
+		<input type="text" id="txtVideo"></input>
+	</p>
+	<p>
+		<label for="numStart">Start time</label>
+		<input type="number" id="numStart"></input>
+	</p>
+	<p>
+		<label for="numDuration">Duration</label>
+		<input type="number" id="numDuration"></input>
+	</p>
+	<input type="button" id="btnPlay" onclick="playNewVideo();" value="Play"></input>
+	<a href="javascript:window.location.href=window.location.href">self link</a>
+	<a href="javascript:copyLink();">copy link</a>
+
+    <script>
+	  function elementTextOrNull(elementID) {
+		let text = document.getElementById(elementID).text;
+		if (text && text.trim()) {
+			return text;
+		}
+		return null;
+	  }
+	  function elementValueOrNull(elementID) {
+		let val = document.getElementById(elementID).valueAsNumber;
+		if (!isNaN(val)) {
+			return val;
+		}
+		console.log(document.getElementById(elementID));
+		console.log(val);
+		console.log(typeof val);
+		return null;
+	  }
+      // 2. This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+	  
+	  var query = parseURLQuery();
+	  console.log(query);
+	  
+	  var snipData;
+	  function loadSnipData() {
+		  snipData = {
+			'video': elementTextOrNull("txtVideo") ?? query.video ?? 'M7lc1UVf-VE',
+			'start': elementValueOrNull("numStart") ?? query.start ?? 10,
+			'duration': elementValueOrNull("numDuration") ?? query.duration ?? 5,
+		  };
+		  document.getElementById("txtVideo").value = snipData.video;
+		  document.getElementById("numStart").value = snipData.start;
+		  document.getElementById("numDuration").value = snipData.duration;
+	  }
+	  
+	  var playing = false;
+      var player;
+	  function tryStartPlayer() {
+		if (!playing && player && player.playVideo && typeof player.playVideo == "function") {
+			player.playVideo();
+		}
+	  }
+	  for (let k in window) {
+		if (/^on/.test(k)) {
+			window.addEventListener(k.slice(2), tryStartPlayer);
+			console.log(k);
+		}
+	  }
+
+      // 3. This function creates an <iframe> (and YouTube player)
+      //    after the API code downloads.
+      function onYouTubeIframeAPIReady() {
+		loadVideo();
+      }
+	  function loadVideo() {
+		loadSnipData();
+		console.log(snipData);
+        player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          videoId: snipData.video,
+          playerVars: {
+			//'mute': 1,
+			'start': snipData.start,
+            'playsinline': 1
+          },
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+	  }
+
+      // 4. The API will call this function when the video player is ready.
+	  var intervalID = null;
+      function onPlayerReady(event) {
+		return;
+		intervalID = setInterval(() => {
+			if (!playing) {
+				console.log("try play video");
+				event.target.playVideo();
+			}
+		}, 16);
+      }
+
+      // 5. The API calls this function when the player's state changes.
+      //    The function indicates that when playing a video (state=1),
+      //    the player should play for six seconds and then stop.
+	  var timeoutID = null;
+      function onPlayerStateChange(event) {
+			console.log("here");
+        if (event.data == YT.PlayerState.PLAYING && !playing) {
+			playing = true;
+			console.log(intervalID);
+			clearInterval(intervalID);
+			timeoutID = setTimeout(() => {
+				player.stopVideo();
+			}, 1000 * snipData.duration);
+        } else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED) {
+			clearTimeout(timeoutID);
+		}
+      }
+	  function parseURLQuery() {
+		let parts = window.location.search.substr(1).split('&');
+		let queryMap = {};
+		for (let i = 0; i < parts.length; ++i) {
+			let arr = parts[i].split('=');
+			if (arr.length != 2) {
+				console.log("invalid argument: " + parts[i]);
+			}
+			queryMap[arr[0]] = arr[1];
+		}
+		return queryMap;
+	  }
+	  
+	  function playNewVideo() {
+		playing = false;
+		loadSnipData();
+		history.pushState({}, "", "file:///C:/Users/Eric%20Pan/Desktop/Programs/Web/YouTubeSnips/youtube-snips.html?video=" + snipData.video + "&start=" + snipData.start + "&duration=" + snipData.duration);
+		console.log(player);
+		console.log(typeof player.stopVideo)
+		player.stopVideo();
+		player.loadVideoById(snipData.video, snipData.start);
+		console.log(player);
+		console.log(typeof player.playVideo)
+		player.playVideo();
+	  }
+	  
+	  function copyLink() {
+		navigator.clipboard.writeText(window.location.href);
+	  }
+    </script>
+  </body>
+</html>
