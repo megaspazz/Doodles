@@ -21,7 +21,8 @@
 
     <script>
 	  function elementTextOrNull(elementID) {
-		let text = document.getElementById(elementID).text;
+		let text = document.getElementById(elementID).value;
+		console.log(text);
 		if (text && text.trim()) {
 			return text;
 		}
@@ -142,6 +143,7 @@
 	  function playNewVideo() {
 		playing = false;
 		loadSnipData();
+		console.log(snipData);
 		history.pushState({}, "", window.location.href.split('?')[0] + "?video=" + snipData.video + "&start=" + snipData.start + "&duration=" + snipData.duration);
 		console.log(player);
 		console.log(typeof player.stopVideo)
