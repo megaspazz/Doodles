@@ -32,6 +32,9 @@
 				}
 			}
 			
+			const PREFIX_LENGTH = 5;
+			const SUFFIX_LENGTH = 5;
+			
 			const WIDTH = 800;
 			const HEIGHT = 600;
 			const RADIUS = 160;
@@ -59,10 +62,20 @@
 			
 			const SVG_NS = "http://www.w3.org/2000/svg";
 			
-			let game;
-			let render;
+			function newGame(prefixLength, suffixLength) {
+				let svgGame = document.getElementById("svgGame");
+				svgGame.setAttribute("width", WIDTH);
+				svgGame.setAttribute("height", HEIGHT);
+				
+				log(game);
+				render.updateGame(game);
+				
+				let txtInput = document.getElementById("txtInput");
+				txtInput.onkeydown = processInput;
+			}
 			
 			window.onload = function() {
+			
 				game = Game.generate(5, 5);
 				render = new Render(document.getElementById("svgGame"));
 				let svgGame = document.getElementById("svgGame");
@@ -213,6 +226,7 @@
 				static #rangePercentile(low, high, percentile) {
 					return low + (high - low) * percentile;
 				}
+				
 				/*
 				static #startR = 219;
 				static #startG = 112;
@@ -222,6 +236,7 @@
 				static #endG = 251;
 				static #endB = 152;
 				*/
+				
 				static #startR = 223;
 				static #startG = 223;
 				static #startB = 223;
@@ -237,6 +252,9 @@
 				
 				static #borderWidth = 4;
 			}
+			
+			let render = new Render(document.getElementById("svgGame"));
+			let game = Game.generate(PREFIX_LENGTH, SUFFIX_LENGTH);
 			
 			//let game = new Game("HELL", "O", "RLDW");
 		</script>

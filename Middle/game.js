@@ -40,7 +40,7 @@ class Game {
 		log(solution.prefixCircles.concat(solution.suffixCircles));
 		for (const letterCircle of solution.prefixCircles.concat(solution.suffixCircles)) {
 			++letterCircle.currFreq;
-			console.log(letterCircle);
+			log(letterCircle);
 		}
 		log("winner: " + word, solution);
 		return true;
