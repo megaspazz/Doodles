@@ -3,6 +3,10 @@
 		<title>Middle</title>
 	</head>
 	<body>
+		<h1>M I [D] D L E</h1>
+		<div>
+			Form as many words as you can by using some letters from the left half, the middle letter, and some letters from the right half.
+		</div>
 		<svg id="svgGame"></svg>
 		<div>
 			<input id="txtInput" type="text" onkeydown="processInput();" autofocus></input>
@@ -11,6 +15,9 @@
 		
 		<script src="words.js"></script>
 		<script src="game.js"></script>
+		<script src="solution.js"></script>
+		<script src="letter_circle.js"></script>
+		<script src="word_circle.js"></script>
 		<script type="text/javascript">
 			const DEBUG = true;
 			
@@ -134,32 +141,8 @@
 				svgGame.setAttribute("width", WIDTH);
 				svgGame.setAttribute("height", HEIGHT);
 				
-				render.drawCircle(game.prefix, WIDTH / 2 - RADIUS, HEIGHT / 2, RADIUS, 2 * Math.PI / (game.prefix.length + 1), 2 * Math.PI / (game.prefix.length + 1));
-				render.drawCircle(game.suffix, WIDTH / 2 + RADIUS, HEIGHT / 2, RADIUS, Math.PI + 2 * Math.PI / (game.suffix.length + 1), 2 * Math.PI / (game.suffix.length + 1));
-				let middleLetterCircle = createSVGElement("circle", {
-					"cx": WIDTH / 2,
-					"cy": HEIGHT / 2,
-					"r": LETTER_RADIUS + MIDDLE_BORDER_SIZE / 2,
-					"style": style({
-						"fill": "DeepSkyBlue",
-						"stroke": "DodgerBlue",
-						"stroke-width": MIDDLE_BORDER_SIZE,
-					}),
-				});
-				let middleLetterText = createSVGElement("text", {
-					"x": WIDTH / 2,
-					"y": HEIGHT / 2,
-					"font-size": FONT_SIZE,
-					"font-family": FONT_FAMILY,
-					"text-anchor": "middle",
-					"dominant-baseline": "middle",
-				}, game.middle);
-				svgGame.appendChild(middleLetterCircle);
-				svgGame.appendChild(middleLetterText);
-				
-				render.updateWords(game);
 				console.log(game);
-				render.updateCircles(game);
+				render.updateGame(game);
 				
 				let txtInput = document.getElementById("txtInput");
 				txtInput.onkeydown = processInput;
@@ -170,80 +153,13 @@
 					let txtInput = document.getElementById("txtInput");
 					let word = txtInput.value.toUpperCase();
 					if (game.checkAndUpdate(word)) {
-						render.updateWords(game);
-						render.updateCircles(game);
+						render.updateGame(game);
 						log("BIG winner: " + word);
 					} else {
 						log("BIG loser: " + word);
 					}
 					txtInput.value = "";
 				}
-			}
-			
-			class WordCircle {
-				constructor(word) {
-					this.word = word;
-					
-					this.letterCircles = {};
-					[...word].forEach(c => {
-						this.#addLetterCircle(new LetterCircle(c, 0));
-					});
-				}
-				
-				addSolution(word) {
-					let solutionCircles = [];
-					let indexByChar = {};
-					// TODO: randomize order for duplicate letters for incrementing maxFreq.
-					[...word].forEach(c => {
-						let index = ~~indexByChar[c];
-						let letterCircle = this.letterCircles[c][index];
-						++letterCircle.maxFreq;
-						solutionCircles.push(letterCircle);
-						indexByChar[c] = index + 1;
-					});
-					return solutionCircles;
-				}
-				
-				flattenedLetterCircles() {
-					return [].concat(...Object.values(this.letterCircles));
-				}
-				
-				#addLetterCircle(letterCircle) {
-					let arr = this.letterCircles[letterCircle.letter];
-					if (!arr) {
-						arr = [];
-						this.letterCircles[letterCircle.letter] = arr;
-					}
-					arr.push(letterCircle);
-				}
-			}
-			
-			class LetterCircle {
-				constructor(letter, maxFreq) {
-					this.letter = letter;
-					this.maxFreq = maxFreq;
-					this.currFreq = 0;
-				}
-				
-				increment() {
-					++this.currFreq;
-					let r = ~~Game.#rangePercentile(Game.#startR, Game.#endR, this.currFreq / this.maxFreq);
-					let g = ~~Game.#rangePercentile(Game.#startG, Game.#endG, this.currFreq / this.maxFreq);
-					let b = ~~Game.#rangePercentile(Game.#startB, Game.#endB, this.currFreq / this.maxFreq);
-					this.circleElement.style.fill = "rgb(${r}, ${g}, ${b})";
-				}
-				
-				static #rangePercentile(low, high, percentile) {
-					return lo + (high - low) * percentile;
-				}
-				
-				static #startR = 219;
-				static #startG = 112;
-				static #startB = 147;
-				
-				static #endR = 152;
-				static #endG = 251;
-				static #endB = 152;
 			}
 			
 			class Render {
@@ -278,88 +194,9 @@
 				}
 				*/
 				
-				// TODO: remove LetterCircle construction from rendering.
-				drawCircle(word, x0, y0, radius, startRads, deltaRads) {
-					let letterCircles = [];
-					let outerCircle = createSVGElement("circle", {
-						"cx": x0,
-						"cy": y0,
-						"r": radius,
-						"style": style({
-							"fill": "rgb(191, 191, 191)",
-						}),
-					});
-					this.svgGame.prepend(outerCircle);
-					for (let i = 0; i < word.length; ++i) {
-						let x = x0 + radius * Math.cos(startRads + i * deltaRads);
-						let y = y0 + radius * Math.sin(startRads + i * deltaRads);
-						log(word, x0, y0, radius, startRads, deltaRads);
-						let letterCircle = createSVGElement("circle", {
-							"cx": x,
-							"cy": y,
-							"r": LETTER_RADIUS,
-							"style": style({
-								"fill": "SkyBlue",
-							}),
-						});
-						let letterText = createSVGElement("text", {
-							"x": x,
-							"y": y,
-							"font-size": FONT_SIZE,
-							"font-family": FONT_FAMILY,
-							"text-anchor": "middle",
-							"dominant-baseline": "middle",
-						}, word[i]);
-						letterCircles.push(new LetterCircle(word[i], 0));
-						log(letterText);
-						this.svgGame.appendChild(letterCircle);
-						this.svgGame.appendChild(letterText);
-					}
-					return letterCircles;
-				}
-				
-				#drawCircle(letterCircles, x0, y0, radius, startRads, deltaRads) {
-					let outerCircle = createSVGElement("circle", {
-						"cx": x0,
-						"cy": y0,
-						"r": radius,
-						"style": style({
-							"fill": "LightSkyBlue",
-						}),
-					});
-					this.svgGame.prepend(outerCircle);
-					for (const [i, letterCircle] of letterCircles.entries()) {
-						let x = x0 + radius * Math.cos(startRads + i * deltaRads);
-						let y = y0 + radius * Math.sin(startRads + i * deltaRads);
-						let letter = letterCircle.letter;
-						log(i, letter, letterCircle, x0, y0, radius, startRads, deltaRads);
-						let rgb = Render.#colorFor(letterCircle);
-						let borderWidth = 0;
-						// TODO: refactor into function
-						if (letterCircle.currFreq == letterCircle.maxFreq) {
-							borderWidth = Render.#borderWidth;
-						}
-						let letterCircleElement = createSVGElement("circle", {
-							"cx": x,
-							"cy": y,
-							"r": LETTER_RADIUS + borderWidth / 2,
-							"style": style({
-								"fill": "rgb(" + rgb.join(", ") + ")",
-								"stroke": "rgb(" + Render.#borderColor.join(", ") + ")",
-								"stroke-width": borderWidth,
-							}),
-						});
-						let letterTextElement = createSVGElement("text", {
-							"x": x,
-							"y": y,
-							"font-size": FONT_SIZE,
-							"font-family": FONT_FAMILY,
-							"text-anchor": "middle",
-							"dominant-baseline": "middle",
-						}, letter);
-						this.svgGame.appendChild(letterCircleElement);
-						this.svgGame.appendChild(letterTextElement);
-					}
+				updateGame(game) {
+					this.updateCircles(game);
+					this.updateWords(game);
 				}
 				
 				updateCircles(game) {
@@ -420,8 +257,52 @@
 					});
 				}
 				
+				#drawCircle(letterCircles, x0, y0, radius, startRads, deltaRads) {
+					let outerCircle = createSVGElement("circle", {
+						"cx": x0,
+						"cy": y0,
+						"r": radius,
+						"style": style({
+							"fill": "LightSkyBlue",
+						}),
+					});
+					this.svgGame.prepend(outerCircle);
+					for (const [i, letterCircle] of letterCircles.entries()) {
+						let x = x0 + radius * Math.cos(startRads + i * deltaRads);
+						let y = y0 + radius * Math.sin(startRads + i * deltaRads);
+						let letter = letterCircle.letter;
+						log(i, letter, letterCircle, x0, y0, radius, startRads, deltaRads);
+						let rgb = Render.#colorFor(letterCircle);
+						let borderWidth = 0;
+						// TODO: refactor into function
+						if (letterCircle.isCompleted()) {
+							borderWidth = Render.#borderWidth;
+						}
+						let letterCircleElement = createSVGElement("circle", {
+							"cx": x,
+							"cy": y,
+							"r": LETTER_RADIUS + borderWidth / 2,
+							"style": style({
+								"fill": "rgb(" + rgb.join(", ") + ")",
+								"stroke": "rgb(" + Render.#borderColor.join(", ") + ")",
+								"stroke-width": borderWidth,
+							}),
+						});
+						let letterTextElement = createSVGElement("text", {
+							"x": x,
+							"y": y,
+							"font-size": FONT_SIZE,
+							"font-family": FONT_FAMILY,
+							"text-anchor": "middle",
+							"dominant-baseline": "middle",
+						}, letter);
+						this.svgGame.appendChild(letterCircleElement);
+						this.svgGame.appendChild(letterTextElement);
+					}
+				}
+				
 				static #colorFor(letterCircle) {
-					let percentile = letterCircle.currFreq / letterCircle.maxFreq;
+					let percentile = letterCircle.completionProgress();
 					let r = ~~Render.#rangePercentile(Render.#startR, Render.#endR, percentile);
 					let g = ~~Render.#rangePercentile(Render.#startG, Render.#endG, percentile);
 					let b = ~~Render.#rangePercentile(Render.#startB, Render.#endB, percentile);
@@ -454,28 +335,6 @@
 				static #borderColor = [Render.#borderR, Render.#borderG, Render.#borderB];
 				
 				static #borderWidth = 4;
-			}
-			
-			class Solution {
-				static NOT_EXIST = 0;
-				static NOT_FOUND = 1;
-				static FOUND = 2;
-				
-				constructor(word, middleIndex, state, prefixCircles, suffixCircles) {
-					this.word = word;
-					this.middleIndex = middleIndex;
-					this.state = state;
-					this.prefixCircles = prefixCircles;
-					this.suffixCircles = suffixCircles;
-				}
-				
-				prefix() {
-					return this.word.substring(0, middleIndex);
-				}
-				
-				suffix() {
-					return this.word.substring(middleIndex + 1);
-				}
 			}
 			
 			//let game = new Game("HELL", "O", "RLDW");
