@@ -59,7 +59,12 @@
 			
 			const SVG_NS = "http://www.w3.org/2000/svg";
 			
+			let game;
+			let render;
+			
 			window.onload = function() {
+				game = Game.generate(5, 5);
+				render = new Render(document.getElementById("svgGame"));
 				let svgGame = document.getElementById("svgGame");
 				svgGame.setAttribute("width", WIDTH);
 				svgGame.setAttribute("height", HEIGHT);
@@ -234,8 +239,6 @@
 			}
 			
 			//let game = new Game("HELL", "O", "RLDW");
-			let game = Game.generate(5, 5);
-			let render = new Render(document.getElementById("svgGame"));
 		</script>
 	</body>
 </html>
