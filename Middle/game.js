@@ -18,7 +18,6 @@ class Game {
 					words = new Map();
 					this.solutions[w.length] = words;
 				}
-				//console.log(w, this.validate(w));
 				let wPrefix = w.substring(0, middleIndex);
 				let wSuffix = w.substring(middleIndex + 1);
 				let prefixCircles = this.prefixCircle.addSolution(wPrefix);
@@ -26,6 +25,8 @@ class Game {
 				words.set(w, new Solution(w, middleIndex, Solution.NOT_FOUND, prefixCircles, suffixCircles));
 			}
 		});
+		Game.#shuffle(this.prefixCircle.letterCircles);
+		Game.#shuffle(this.suffixCircle.letterCircles);
 	}
 	
 	checkAndUpdate(word) {
@@ -47,7 +48,6 @@ class Game {
 	
 	validate(word) {
 		for (let i = 1; i + 1 < word.length; ++i) {
-			//console.log(word, i, word[i], word[i] == this.middle, Game.#validatePart(this.prefixFreq, word.substring(0, i)), Game.#validatePart(this.suffixFreq, word.substring(i + 1)))
 			if (word[i] == this.middle && Game.#validatePart(this.prefixFreq, word.substring(0, i)) && Game.#validatePart(this.suffixFreq, word.substring(i + 1))) {
 				return i;
 			}
@@ -106,15 +106,6 @@ class Game {
 				return new Game(prefix, middle, suffix);
 			}
 		}
-		
-		//log(anchor, middleIndexLower, middleIndexUpper, middleIndex, prefixArr, suffixArr);
-		
-		/*
-		let prefix = Game.#randomLetters(prefixSize).join("");
-		let middle = Game.#randomLetter();
-		let suffix = Game.#randomLetters(suffixSize).join("");
-		return new Game(prefix, middle, suffix);
-		*/
 	}
 	
 	static #wordsList = WORDS_LIST;
@@ -173,7 +164,6 @@ class Game {
 	static #shuffle(arr) {
 		for (let i = arr.length - 1; i > 0; --i) {
 			let j = ~~(Math.random() * (i + 1));
-			//[[arr[i], arr[j]] = [[arr[j], arr[i]];
 			let tmp = arr[i];
 			arr[i] = arr[j];
 			arr[j] = tmp;

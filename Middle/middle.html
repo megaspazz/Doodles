@@ -5,7 +5,12 @@
 	<body>
 		<h1>M I [D] D L E</h1>
 		<div>
-			Form as many words as you can by using some letters from the left half, the middle letter, and some letters from the right half.
+			<p>
+				Form as many words as you can by using some letters from the left half, the middle letter, and some letters from the right half.
+			</p>
+			<p>
+				Refresh the page to get a new puzzle.
+			</p>
 		</div>
 		<svg id="svgGame"></svg>
 		<div>
@@ -19,7 +24,7 @@
 		<script src="letter_circle.js"></script>
 		<script src="word_circle.js"></script>
 		<script type="text/javascript">
-			const DEBUG = true;
+			const DEBUG = false;
 			
 			function log() {
 				if (DEBUG) {
@@ -52,96 +57,14 @@
 				}).join(" ");
 			}
 			
-			/*
-			function drawCircle(word, x0, y0, radius, startRads, deltaRads) {
-				let svgGame = document.getElementById("svgGame");
-				let outerCircle = createSVGElement("circle", {
-					"cx": x0,
-					"cy": y0,
-					"r": radius,
-					"style": style({
-						"fill": "SteelBlue",
-					}),
-				});
-				svgGame.prepend(outerCircle);
-				for (let i = 0; i < word.length; ++i) {
-					let x = x0 + radius * Math.cos(startRads + i * deltaRads);
-					let y = y0 + radius * Math.sin(startRads + i * deltaRads);
-					log(word, x0, y0, radius, startRads, deltaRads);
-					let letterCircle = createSVGElement("circle", {
-						"cx": x,
-						"cy": y,
-						"r": LETTER_RADIUS,
-						"style": style({
-							"fill": "SkyBlue",
-						}),
-					});
-					let letterText = createSVGElement("text", {
-						"x": x,
-						"y": y,
-						"font-size": FONT_SIZE,
-						"font-family": FONT_FAMILY,
-						"text-anchor": "middle",
-						"dominant-baseline": "middle",
-					}, word[i]);
-					log(letterText);
-					svgGame.appendChild(letterCircle);
-					svgGame.appendChild(letterText);
-				}
-			}
-			*/
-			
-			function init(prefix, middle, suffix) {
-				for (let i = 0; i < prefix.length(); ++i) {
-					
-				}
-			}
-			
 			const SVG_NS = "http://www.w3.org/2000/svg";
-			
-			/*
-			class Render {
-				constructor(divWords) {
-					this.divWords = divWords;
-					this.lengthToDiv = [];
-				}
-				
-				initFromGame(game) {
-				game.solutions.forEach((words, len) => {
-					let div = document.createElement("div");
-					let header = document.createElement("h2");
-					let ol = document.createElement("ol");
-					let wordsRemaining = 0;
-					words.forEach((state, word) => {
-						switch (state) {
-							case Game.NOT_FOUND: {
-								++wordsRemaining;
-								break;
-							}
-							case Game.FOUND: {
-								let li = document.createElement("li");
-								li.innerHTML = word;
-								ol.append(li);
-								break;
-							}
-						}
-					});
-					this.lengthToDiv[len] = div;
-					header.innerHTML = index + "-letter words (" + g + " remaining)";
-					div.appendChild(header);
-					div.appendChild(ol);
-					divWords.appendChild(div);
-				});
-				};
-			}
-			*/
 			
 			window.onload = function() {
 				let svgGame = document.getElementById("svgGame");
 				svgGame.setAttribute("width", WIDTH);
 				svgGame.setAttribute("height", HEIGHT);
 				
-				console.log(game);
+				log(game);
 				render.updateGame(game);
 				
 				let txtInput = document.getElementById("txtInput");
@@ -167,43 +90,16 @@
 					this.svgGame = svgGame;
 				}
 				
-				/*
-				initGame() {
-					render.drawCircle(game.prefix, WIDTH / 2 - RADIUS, HEIGHT / 2, RADIUS, 2 * Math.PI / (game.prefix.length + 1), 2 * Math.PI / (game.prefix.length + 1));
-					render.drawCircle(game.suffix, WIDTH / 2 + RADIUS, HEIGHT / 2, RADIUS, Math.PI + 2 * Math.PI / (game.suffix.length + 1), 2 * Math.PI / (game.suffix.length + 1));
-					let middleLetterCircle = createSVGElement("circle", {
-						"cx": WIDTH / 2,
-						"cy": HEIGHT / 2,
-						"r": LETTER_RADIUS + MIDDLE_BORDER_SIZE / 2,
-						"style": style({
-							"fill": "DeepSkyBlue",
-							"stroke": "DodgerBlue",
-							"stroke-width": MIDDLE_BORDER_SIZE,
-						}),
-					});
-					let middleLetterText = createSVGElement("text", {
-						"x": WIDTH / 2,
-						"y": HEIGHT / 2,
-						"font-size": FONT_SIZE,
-						"font-family": FONT_FAMILY,
-						"text-anchor": "middle",
-						"dominant-baseline": "middle",
-					}, game.middle);
-					svgGame.appendChild(middleLetterCircle);
-					svgGame.appendChild(middleLetterText);
-				}
-				*/
-				
 				updateGame(game) {
 					this.updateCircles(game);
 					this.updateWords(game);
 				}
 				
 				updateCircles(game) {
-					console.log(game);
+					log(game);
 					this.svgGame.innerHTML = "";
-					this.#drawCircle(game.prefixCircle.flattenedLetterCircles(), WIDTH / 2 - RADIUS, HEIGHT / 2, RADIUS, 2 * Math.PI / (game.prefix.length + 1), 2 * Math.PI / (game.prefix.length + 1));
-					this.#drawCircle(game.suffixCircle.flattenedLetterCircles(), WIDTH / 2 + RADIUS, HEIGHT / 2, RADIUS, Math.PI + 2 * Math.PI / (game.suffix.length + 1), 2 * Math.PI / (game.suffix.length + 1));
+					this.#drawCircle(game.prefixCircle.letterCircles, WIDTH / 2 - RADIUS, HEIGHT / 2, RADIUS, 2 * Math.PI / (game.prefix.length + 1), 2 * Math.PI / (game.prefix.length + 1));
+					this.#drawCircle(game.suffixCircle.letterCircles, WIDTH / 2 + RADIUS, HEIGHT / 2, RADIUS, Math.PI + 2 * Math.PI / (game.suffix.length + 1), 2 * Math.PI / (game.suffix.length + 1));
 					let middleLetterCircle = createSVGElement("circle", {
 						"cx": WIDTH / 2,
 						"cy": HEIGHT / 2,
