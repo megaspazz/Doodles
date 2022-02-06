@@ -22,7 +22,7 @@
             </div>
             <input id="btnHint" type="button" value="Next Hint"></input>
         </div>
-        <div id="divHints" style="font-family: monospace;"></div>
+        <div id="divHints" style="font-family: monospace; white-space: pre-wrap; margin: 12px;"></div>
         <div id="divWinBanner" style="font-family: Helvetica, sans-serif; font-size: x-large; white-space: pre-wrap;"></div>
         <div id="divResult" style="white-space: pre-wrap;"></div>
         <script>
@@ -33,7 +33,7 @@
                 Log.write("start");
 
                 game = Game.generate(g => {
-                    return g.hints.length >= 2;
+                    return g.hints.length >= 3;
                 });
                 Log.write(game);
 
