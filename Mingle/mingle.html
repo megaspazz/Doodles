@@ -41,15 +41,20 @@
                 const divWinBanner = document.getElementById("divWinBanner");
                 const divResult = document.getElementById("divResult");
                 render = new Render(divHints, divWinBanner, divResult);
+                Log.write("render ready");
 
                 const txtInput = document.getElementById("txtInput");
                 txtInput.onkeydown = handleInput;
 
                 const btnHint = document.getElementById("btnHint");
                 btnHint.onclick = nextHint;
+                
+                Log.write("events ready");
 
                 nextHint();
                 render.drawHints(game);
+                
+                Log.write(document.getElementsByTagName("html")[0].innerHTML);
             }
 
             function handleInput(e) {
