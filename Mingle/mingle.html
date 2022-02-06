@@ -11,21 +11,24 @@
             <input id="btnHint" type="button" value="Next Hint"></input>
         </div>
         <div id="divHints" style="font-family: monospace;"></div>
-        <div id="divResult" style="font-family: Helvetica, sans-serif; font-size: x-large;"></div>
+        <div id="divWinBanner" style="font-family: Helvetica, sans-serif; font-size: x-large; white-space: pre-wrap;"></div>
+        <div id="divResult" style="white-space: pre-wrap;"></div>
         <script>
             let game;
             let render;
 
             window.onload = function() {
-                console.log("start");
+                Log.write("start");
 
                 game = Game.generate(g => {
                     return g.hints.length >= 2;
                 });
-                console.log(game);
+                Log.write(game);
 
                 const divHints = document.getElementById("divHints");
-                render = new Render(divHints);
+                const divWinBanner = document.getElementById("divWinBanner");
+                const divResult = document.getElementById("divResult");
+                render = new Render(divHints, divWinBanner, divResult);
 
                 const txtInput = document.getElementById("txtInput");
                 txtInput.onkeydown = handleInput;
@@ -44,11 +47,7 @@
                     const divResult = document.getElementById("divResult");
                     const btnHint = document.getElementById("btnHint");
                     const guess = txtInput.value.toUpperCase();
-                    if (guess === game.solution) {
-                        divResult.innerHTML = "YOU WIN!";
-                    } else {
-                        divResult.innerHTML = "ur a loser haha";
-                    }
+                    render.drawResult(game, guess);
                     txtInput.value = "";
                     txtInput.disabled = true;
                     btnHint.disabled = true;

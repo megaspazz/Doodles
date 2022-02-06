@@ -5,9 +5,14 @@ class Game {
         this.hintsUsed = 0;
     }
 
-    #createFromTemplate() {
-        return new Game([...this.hints], this.solution);
+    static SOLUTION_WRONG = 0;
+    static SOLUTION_OTHER_WORD = 1;
+    static SOLUTION_CORRECT = 2;
+
+    checkSolution(guess) {
+        return this.hints.map(hint => Game.#checkHint(hint, guess));
     }
+
     static generate(filterFn) {
         return Game.#firstMatch(Game.#shuffle([...Game.#getAllGames()]), filterFn);
     }
@@ -26,6 +31,21 @@ class Game {
         const gamesByLength = Game.#getAllGamesByLength();
         const idx = ~~(Math.random() * gamesByLength[len].length);
         return gamesByLength[len][idx].#createFromTemplate();
+    }
+
+    static #checkHint(hint, guess) {
+        if (guess.length !== hint.size) {
+            return Game.SOLUTION_WRONG;
+        }
+        const result = hint.word.substring(0, hint.offset) + guess + hint.word.substring(hint.offsetEnd());
+        Log.write(result, hint.word);
+        if (result === hint.word) {
+            return Game.SOLUTION_CORRECT;
+        }
+        if (Words.DICT.has(result)) {
+            return Game.SOLUTION_OTHER_WORD;
+        }
+        return Game.SOLUTION_WRONG;
     }
 
     static #allGames = null;
@@ -69,6 +89,10 @@ class Game {
             }
         }
         return Game.#allGamesByLength;
+    }
+
+    #createFromTemplate() {
+        return new Game([...this.hints], this.solution);
     }
 
     static #shuffle(arr) {
