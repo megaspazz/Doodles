@@ -1,5 +1,5 @@
 class Log {
-    static #DEBUG = true;
+    static #DEBUG = false;
 
     static write() {
         if (Log.#DEBUG) {
