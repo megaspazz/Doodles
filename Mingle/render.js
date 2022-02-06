@@ -33,7 +33,7 @@ class Render {
         if (guess === game.solution) {
             this.divWinBanner.innerHTML = "YOU WIN!\n" + Render.#pointingDownEmoji + " Share with your friends " + Render.#pointingDownEmoji;
         } else {
-            this.divWinBanner.innerHTML = "ur a loser haha\n" + Render.#pointingDownEmoji + " tell ur \"friends\" below " + Render.#pointingDownEmoji;
+            this.divWinBanner.innerHTML = "ur a loser haha\nthe answer was actually " + game.solution  + "\n" + Render.#pointingDownEmoji + " tell ur \"friends\" below " + Render.#pointingDownEmoji;
         }
 
         const results = game.checkSolution(guess);
