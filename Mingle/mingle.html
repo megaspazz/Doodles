@@ -1,1 +1,74 @@
+<html>
+    <head>
+        <title>Mingle - Word Game</title>
+    </head>
+    <body>
+        <div id="divInput">
+            <div>
+                <label for="txtInput">FINAL GUESS</label>
+                <input id="txtInput" type="text"></input>
+            </div>
+            <input id="btnHint" type="button" value="Next Hint"></input>
+        </div>
+        <div id="divHints" style="font-family: monospace;"></div>
+        <div id="divResult" style="font-family: Helvetica, sans-serif; font-size: x-large;"></div>
+        <script>
+            let game;
+            let render;
 
+            window.onload = function() {
+                console.log("start");
+
+                game = Game.generate(g => {
+                    return g.hints.length >= 2;
+                });
+                console.log(game);
+
+                const divHints = document.getElementById("divHints");
+                render = new Render(divHints);
+
+                const txtInput = document.getElementById("txtInput");
+                txtInput.onkeydown = handleInput;
+
+                const btnHint = document.getElementById("btnHint");
+                btnHint.onclick = nextHint;
+
+                nextHint();
+                render.drawHints(game);
+            }
+
+            function handleInput(e) {
+                if (e.key === "Enter") {
+                    const txtInput = document.getElementById("txtInput");
+                    const divInput = document.getElementById("divInput");
+                    const divResult = document.getElementById("divResult");
+                    const btnHint = document.getElementById("btnHint");
+                    const guess = txtInput.value.toUpperCase();
+                    if (guess === game.solution) {
+                        divResult.innerHTML = "YOU WIN!";
+                    } else {
+                        divResult.innerHTML = "ur a loser haha";
+                    }
+                    txtInput.value = "";
+                    txtInput.disabled = true;
+                    btnHint.disabled = true;
+                }
+            }
+
+            function nextHint(_) {
+                ++game.hintsUsed;
+                if (game.hintsUsed >= game.hints.length) {
+                    const btnHint = document.getElementById("btnHint");
+                    btnHint.disabled = true;
+                }
+                render.drawHints(game);
+            }
+        </script>
+        
+        <script src="game.js"></script>
+        <script src="hint.js"></script>
+        <script src="log.js"></script>
+        <script src="render.js"></script>
+        <script src="words.js"></script>
+    </body>
+</html>
