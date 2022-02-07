@@ -28,14 +28,22 @@
         <div id="divWinBanner" style="font-family: Helvetica, sans-serif; font-size: x-large; white-space: pre-wrap;"></div>
         <div id="divResult" style="white-space: pre-wrap;"></div>
 
-        <script src="./game.js" type="text/javascript"></script>
-        <script src="./hint.js" type="text/javascript"></script>
-        <script src="./log.js" type="text/javascript"></script>
-        <script src="./render.js" type="text/javascript"></script>
-        <script src="./words.js" type="text/javascript"></script>
+        <script src="https://megaspazz.github.io/Doodles/Mingle/game.js" type="text/javascript"></script>
+        <script src="https://megaspazz.github.io/Doodles/Mingle/hint.js" type="text/javascript"></script>
+        <script src="https://megaspazz.github.io/Doodles/Mingle/log.js" type="text/javascript"></script>
+        <script src="https://megaspazz.github.io/Doodles/Mingle/render.js" type="text/javascript"></script>
+        <script src="https://megaspazz.github.io/Doodles/Mingle/words.js" type="text/javascript"></script>
         <script type="text/javascript">
             let game;
             let render;
+
+            let imports = [
+                "game.js",
+                "hint.js",
+                "log.js",
+                "render.js",
+                "words.js",
+            ];
 
             window.onload = function() {
                 Log.write("start");
