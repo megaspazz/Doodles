@@ -18,8 +18,8 @@ class Words {
 
     static DICT = new Map();
     static {
-        Words.LIST.forEach(word => {
+        for (const word of Words.LIST) {
             Words.DICT.set(word, true);
-        });
+        }
     }
 }
