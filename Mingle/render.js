@@ -53,33 +53,35 @@ class Render {
         Log.write(buf);
         this.divResult.innerHTML = buf.map(row => row.join("")).join("\n");
     }
-
-    static _computeSpacing(hints) {
-        let before = 0;
-        let after = 0;
-        for (const hint of hints) {
-            before = Math.max(before, hint.offset);
-            after = Math.max(after, hint.word.length - hint.offset - hint.size);
-        }
-        return [before, after];
-    }
-
-    static _empty = " ";
-    static _blank = "_";
-
-    static _whiteSquareEmoji = "\u2B1C";
-    static _blackSquareEmoji = "\u2B1B";
-    static _redSquareEmoji = String.fromCodePoint(0x1F7E5);
-    static _yellowSquareEmoji = String.fromCodePoint(0x1F7E8);
-    static _greenSquareEmoji = String.fromCodePoint(0x1F7E9);
-    static _pointingDownEmoji = String.fromCodePoint(0x1F447);
-
-    static _paddingEmoji = Render._blackSquareEmoji;
-    static _wordPartEmoji = Render._whiteSquareEmoji;
-    static _resultToEmoji = new Map();
-    static {
-        Render._resultToEmoji.set(Game.SOLUTION_WRONG, Render._redSquareEmoji);
-        Render._resultToEmoji.set(Game.SOLUTION_OTHER_WORD, Render._yellowSquareEmoji);
-        Render._resultToEmoji.set(Game.SOLUTION_CORRECT, Render._greenSquareEmoji);
-    }
 }
+
+Render._computeSpacing = function(hints) {
+    let before = 0;
+    let after = 0;
+    for (const hint of hints) {
+        before = Math.max(before, hint.offset);
+        after = Math.max(after, hint.word.length - hint.offset - hint.size);
+    }
+    return [before, after];
+}
+
+Render._empty = " ";
+Render._blank = "_";
+
+Render._whiteSquareEmoji = "\u2B1C";
+Render._blackSquareEmoji = "\u2B1B";
+Render._redSquareEmoji = String.fromCodePoint(0x1F7E5);
+Render._yellowSquareEmoji = String.fromCodePoint(0x1F7E8);
+Render._greenSquareEmoji = String.fromCodePoint(0x1F7E9);
+Render._pointingDownEmoji = String.fromCodePoint(0x1F447);
+
+Render._paddingEmoji = Render._blackSquareEmoji;
+Render._wordPartEmoji = Render._whiteSquareEmoji;
+
+Render._resultToEmoji = new Map([
+    [Game.SOLUTION_WRONG, Render._redSquareEmoji],
+    [Game.SOLUTION_OTHER_WORD, Render._yellowSquareEmoji],
+    [Game.SOLUTION_CORRECT, Render._greenSquareEmoji],
+]);
+
+console.log("render.js loaded");

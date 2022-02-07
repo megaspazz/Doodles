@@ -1,5 +1,3 @@
-console.log("in log.js");
-
 class Log {
     // static _CONSOLE = true;
     // static _DOCUMENT = true;
@@ -30,4 +28,4 @@ Log.write = function() {
     // }
 }
 
-console.log("out log.js");
+console.log("log.js loaded");
