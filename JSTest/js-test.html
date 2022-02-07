@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>JS Test</h1>
-        <h6>version 0.0.2</h6>
+        <h6>version 0.0.3</h6>
 
         <div style="font-family: Helvetica, sans-serif;">
             <h2>Instructions</h2>
@@ -29,8 +29,8 @@
         <div id="divWinBanner" style="font-family: Helvetica, sans-serif; font-size: x-large; white-space: pre-wrap;"></div>
         <div id="divResult" style="white-space: pre-wrap;"></div>
 
-        <!-- <script type="text/javascript" src="words.js"></script>
-        <script type="text/javascript" src="log.js"></script> -->
+        <script type="text/javascript" src="words.js"></script>
+        <script type="text/javascript" src="log.js"></script>
         <script type="text/javascript">
             function log() {
                 let divLine = document.createElement("div");
@@ -43,8 +43,8 @@
                 log("hi");
                 log(window.location.href);
                 
-                // let idx = ~~(Math.random() * Words.LIST.length);
-                // log(Words.LIST[idx]);
+                let idx = ~~(Math.random() * Words.LIST.length);
+                log(Words.LIST[idx]);
             }
         </script>
     </body>
