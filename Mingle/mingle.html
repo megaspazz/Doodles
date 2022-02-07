@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>M _ N G L E</h1>
-        <h6>version 0.0.9</h6>
+        <h6>version 0.0.10*</h6>
         <div style="font-family: Helvetica, sans-serif;">
             <h2>Instructions</h2>
             <ul>
@@ -28,11 +28,11 @@
         <div id="divWinBanner" style="font-family: Helvetica, sans-serif; font-size: x-large; white-space: pre-wrap;"></div>
         <div id="divResult" style="white-space: pre-wrap;"></div>
 
-        <script src="game.js" type="text/javascript"></script>
-        <script src="hint.js" type="text/javascript"></script>
+        <!-- <script src="game.js" type="text/javascript"></script> -->
+        <!-- <script src="hint.js" type="text/javascript"></script> -->
         <script src="log.js" type="text/javascript"></script>
-        <script src="render.js" type="text/javascript"></script>
-        <script src="words.js" type="text/javascript"></script>
+        <!-- <script src="render.js" type="text/javascript"></script> -->
+        <!-- <script src="words.js" type="text/javascript"></script> -->
         <script type="text/javascript">
             let game;
             let render;
@@ -40,10 +40,10 @@
             window.onload = function() {
                 Log.write("start");
 
-                game = Game.generate(g => {
-                    return g.hints.length >= 3;
-                });
-                game.shuffleHints();
+                // game = Game.generate(g => {
+                //     return g.hints.length >= 3;
+                // });
+                // game.shuffleHints();
                 // Coarsely sort by difficulty of hint.
                 // const score = (hint) => {
                 //     const before = hint.offset;
@@ -55,10 +55,10 @@
                 // });
                 Log.write(game);
 
-                const divHints = document.getElementById("divHints");
-                const divWinBanner = document.getElementById("divWinBanner");
-                const divResult = document.getElementById("divResult");
-                render = new Render(divHints, divWinBanner, divResult);
+                // const divHints = document.getElementById("divHints");
+                // const divWinBanner = document.getElementById("divWinBanner");
+                // const divResult = document.getElementById("divResult");
+                // render = new Render(divHints, divWinBanner, divResult);
                 Log.write("render ready");
 
                 const txtInput = document.getElementById("txtInput");
@@ -69,8 +69,8 @@
                 
                 Log.write("events ready");
 
-                nextHint();
-                render.drawHints(game);
+                // nextHint();
+                // render.drawHints(game);
 
                 Log.write(document.getElementsByTagName("html")[0].innerHTML);
             }
@@ -90,12 +90,12 @@
             }
 
             function nextHint() {
-                ++game.hintsUsed;
-                if (game.hintsUsed >= game.hints.length) {
-                    const btnHint = document.getElementById("btnHint");
-                    btnHint.disabled = true;
-                }
-                render.drawHints(game);
+                // ++game.hintsUsed;
+                // if (game.hintsUsed >= game.hints.length) {
+                //     const btnHint = document.getElementById("btnHint");
+                //     btnHint.disabled = true;
+                // }
+                // render.drawHints(game);
                 focusInput();
             }
 
