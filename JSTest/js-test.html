@@ -6,6 +6,8 @@
     <body>
         <h1>JS Test</h1>
         <h6>version 0.0.1</h6>
+
+        <script type="text/javascript" src="words.js"></script>
         <script type="text/javascript">
             function log() {
                 let divLine = document.createElement("div");
@@ -17,6 +19,9 @@
             window.onload = function() {
                 log("hi");
                 log(window.location.href);
+                
+                let idx = ~~(Math.random() * Words.LIST.length);
+                log(Words.LIST[idx]);
             }
         </script>
     </body>
