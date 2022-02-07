@@ -20,12 +20,10 @@ class Words {
         "ABLE",
     ];
 
-    static testPrivateStatic(x) {
-        return Words.#privateStatic(x);
-    }
+    #privateMember = 12;
 
-    static #privateStatic(x) {
-        return x + " <-|" + x;
+    testPrivateStatic(x) {
+        return (this.#privateMember++) + ": " + x;
     }
 
     // static DICT = new Map();

@@ -52,7 +52,10 @@
                 log("WORDS_LIST version: " + WORDS_LIST[wlIdx]);
 
                 log(Words.testStatic("hello"));
-                log(Words.testPrivateStatic("hello"));
+
+                let w = new Words();
+                log(w.testPrivateStatic("hello"));
+                log(w.testPrivateStatic("world"));
             }
 
             class MyClass {
