@@ -3,24 +3,24 @@ class Words {
     //     return x + x;
     // }
 
-    static LIST = [
-        "ABA",
-        "ABANDON",
-        "ABANDONED",
-        "ABATEMENT",
-        "ABBA",
-        "ABBEY",
-        "ABBREVIATION",
-        "ABBREVIATIONS",
-        "ABDOMINAL",
-        "ABIDE",
-        "ABIGAIL",
-        "ABILITIES",
-        "ABILITY",
-        "ABLE",
-    ];
+    // static LIST = [
+    //     "ABA",
+    //     "ABANDON",
+    //     "ABANDONED",
+    //     "ABATEMENT",
+    //     "ABBA",
+    //     "ABBEY",
+    //     "ABBREVIATION",
+    //     "ABBREVIATIONS",
+    //     "ABDOMINAL",
+    //     "ABIDE",
+    //     "ABIGAIL",
+    //     "ABILITIES",
+    //     "ABILITY",
+    //     "ABLE",
+    // ];
 
-    // #privateMember = 12;
+    #privateMember = 12;
 
     // testPrivateStatic(x) {
     //     return (this.#privateMember++) + ": " + x;
