@@ -5,13 +5,12 @@
 
         <!-- <script src="game.js" type="text/javascript"></script> -->
         <!-- <script src="hint.js" type="text/javascript"></script> -->
-        <!-- <script src="log.js" type="text/javascript"></script> -->
         <!-- <script src="render.js" type="text/javascript"></script> -->
         <!-- <script src="words.js" type="text/javascript"></script> -->
     </head>
     <body>
         <h1>M _ N G L E</h1>
-        <h6>version 0.0.31*</h6>
+        <h6>version 0.0.32*</h6>
         <div style="font-family: Helvetica, sans-serif;">
             <h2>Instructions</h2>
             <ul>
@@ -34,6 +33,7 @@
         <div id="divWinBanner" style="font-family: Helvetica, sans-serif; font-size: x-large; white-space: pre-wrap;"></div>
         <div id="divResult" style="white-space: pre-wrap;"></div>
 
+        <script src="log.js" type="text/javascript"></script>
         <script type="text/javascript">
             let game;
             let render;
@@ -44,20 +44,20 @@
             let importsRemaining = imports.length;
 
             window.onload = function() {
-                let headElt = document.getElementsByTagName("head")[0];
-                for (const path of imports) {
-                    let scriptElt = document.createElement("script");
-                    scriptElt.type = "text/javascript";
-                    scriptElt.src = path;
-                    scriptElt.onload = scriptLoaded;
-                    headElt.appendChild(scriptElt);
-                }
-            }
+            //     let headElt = document.getElementsByTagName("head")[0];
+            //     for (const path of imports) {
+            //         let scriptElt = document.createElement("script");
+            //         scriptElt.type = "text/javascript";
+            //         scriptElt.src = path;
+            //         scriptElt.onload = scriptLoaded;
+            //         headElt.appendChild(scriptElt);
+            //     }
+            // }
 
-            function scriptLoaded() {
-                if (--importsRemaining > 0) {
-                    return;
-                }
+            // function scriptLoaded() {
+            //     if (--importsRemaining > 0) {
+            //         return;
+            //     }
                 
                 console.log(typeof Log);
                 if (typeof Log !== "undefined") {
