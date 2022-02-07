@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>JS Test</h1>
-        <h6>version 0.0.12</h6>
+        <h6>version 0.0.13</h6>
 
         <div style="font-family: Helvetica, sans-serif;">
             <h2>Instructions</h2>
@@ -50,6 +50,8 @@
                 
                 let wlIdx = ~~(Math.random() * WORDS_LIST.length);
                 log("WORDS_LIST version: " + WORDS_LIST[wlIdx]);
+
+                log(Words.testStatic("hello"));
             }
 
             class MyClass {

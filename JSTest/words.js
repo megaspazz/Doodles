@@ -1,4 +1,7 @@
 class Words {
+    static testStatic(x) {
+        return x + x;
+    }
     // static LIST = [
     //     "ABA",
     //     "ABANDON",
@@ -40,6 +43,10 @@ Words.LIST = [
     "ABILITY",
     "ABLE",
 ];
+
+// Words.#privateTest = function(x) {
+//     return x + x;
+// }
 
 WORDS_LIST = [
     "ABA",
