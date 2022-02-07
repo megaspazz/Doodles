@@ -2,29 +2,30 @@ class Words {
     static testStatic(x) {
         return x + x;
     }
-    // static LIST = [
-    //     "ABA",
-    //     "ABANDON",
-    //     "ABANDONED",
-    //     "ABATEMENT",
-    //     "ABBA",
-    //     "ABBEY",
-    //     "ABBREVIATION",
-    //     "ABBREVIATIONS",
-    //     "ABDOMINAL",
-    //     "ABIDE",
-    //     "ABIGAIL",
-    //     "ABILITIES",
-    //     "ABILITY",
-    //     "ABLE",
-    // ];
+
+    static LIST = [
+        "ABA",
+        "ABANDON",
+        "ABANDONED",
+        "ABATEMENT",
+        "ABBA",
+        "ABBEY",
+        "ABBREVIATION",
+        "ABBREVIATIONS",
+        "ABDOMINAL",
+        "ABIDE",
+        "ABIGAIL",
+        "ABILITIES",
+        "ABILITY",
+        "ABLE",
+    ];
 
     static testPrivateStatic(x) {
         return Words.#privateStatic(x);
     }
 
     static #privateStatic(x) {
-        return x + " <-|->" + x;
+        return x + " <-|" + x;
     }
 
     // static DICT = new Map();
@@ -35,22 +36,22 @@ class Words {
     // }
 }
 
-Words.LIST = [
-    "ABA",
-    "ABANDON",
-    "ABANDONED",
-    "ABATEMENT",
-    "ABBA",
-    "ABBEY",
-    "ABBREVIATION",
-    "ABBREVIATIONS",
-    "ABDOMINAL",
-    "ABIDE",
-    "ABIGAIL",
-    "ABILITIES",
-    "ABILITY",
-    "ABLE",
-];
+// Words.LIST = [
+//     "ABA",
+//     "ABANDON",
+//     "ABANDONED",
+//     "ABATEMENT",
+//     "ABBA",
+//     "ABBEY",
+//     "ABBREVIATION",
+//     "ABBREVIATIONS",
+//     "ABDOMINAL",
+//     "ABIDE",
+//     "ABIGAIL",
+//     "ABILITIES",
+//     "ABILITY",
+//     "ABLE",
+// ];
 
 // Words.#privateTest = function(x) {
 //     return x + x;
