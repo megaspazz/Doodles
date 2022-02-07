@@ -1,13 +1,13 @@
 class Log {
-    static _CONSOLE = false;
-    static _DOCUMENT = false;
+    static #CONSOLE = false;
+    static #DOCUMENT = false;
 
     static write() {
-        if (Log._CONSOLE) {
+        if (Log.#CONSOLE) {
             console.log(...arguments)
         }
 
-        if (Log._DOCUMENT) {
+        if (Log.#DOCUMENT) {
             if (!Log.divOutput) {
                 Log.divOutput = document.createElement("div");
                 Log.divOutput.style.fontFamily = "monospace";
