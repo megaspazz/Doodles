@@ -15578,5 +15578,3 @@ Words.LIST = [
 ];
 
 Words.DICT = new Map(Words.LIST.map(word => [word, true]));
-
-console.log("words.js loaded");

@@ -117,5 +117,3 @@ Game._firstMatch = function(games, filterFn) {
     }
     return null;
 }
-
-console.log("game.js loaded");

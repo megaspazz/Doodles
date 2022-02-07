@@ -83,5 +83,3 @@ Render._resultToEmoji = new Map([
     [Game.SOLUTION_OTHER_WORD, Render._yellowSquareEmoji],
     [Game.SOLUTION_CORRECT, Render._greenSquareEmoji],
 ]);
-
-console.log("render.js loaded");

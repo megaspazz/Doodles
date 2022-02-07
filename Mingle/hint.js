@@ -9,5 +9,3 @@ class Hint {
         return this.offset + this.size;
     }
 }
-
-console.log("hint.js loaded");

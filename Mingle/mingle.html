@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>M _ N G L E</h1>
-        <h6>version 0.0.39*</h6>
+        <h6>version 0.0.40</h6>
         <div style="font-family: Helvetica, sans-serif;">
             <h2>Instructions</h2>
             <ul>
@@ -37,36 +37,7 @@
             let game;
             let render;
 
-            const imports = [
-                "log.js",
-            ];
-            let importsRemaining = imports.length;
-
             window.onload = function() {
-            //     let headElt = document.getElementsByTagName("head")[0];
-            //     for (const path of imports) {
-            //         let scriptElt = document.createElement("script");
-            //         scriptElt.type = "text/javascript";
-            //         scriptElt.src = path;
-            //         scriptElt.onload = scriptLoaded;
-            //         headElt.appendChild(scriptElt);
-            //     }
-            // }
-
-            // function scriptLoaded() {
-            //     if (--importsRemaining > 0) {
-            //         return;
-            //     }
-                
-                console.log(typeof Log);
-                if (typeof Log !== "undefined") {
-                    console.log(typeof Log.write);
-                }
-                // if (Log && Log.write) {
-                //     console.log("it's good");
-                // } else {
-                //     console.log("it's bad");
-                // }
                 Log.write("start");
 
                 game = Game.generate(g => {
@@ -102,8 +73,6 @@
                 render.drawHints(game);
 
                 Log.write(document.getElementsByTagName("html")[0].innerHTML);
-
-                document.getElementById("divWinBanner").innerHTML = "trying my best :( abc coca-cola PEPSI runaways freaky DONE? gogogo";
             }
 
             function handleInput(e) {

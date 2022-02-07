@@ -1,12 +1,8 @@
 class Log {
-    // static _CONSOLE = true;
-    // static _DOCUMENT = true;
-
-    // static divOutput = null;
 }
 
-Log._CONSOLE = true;
-Log._DOCUMENT = true;
+Log._CONSOLE = false;
+Log._DOCUMENT = false;
 
 Log.divOutput = null;
 
@@ -27,5 +23,3 @@ Log.write = function() {
         Log.divOutput.appendChild(divLine);
     }
 }
-
-console.log("log.js loaded");
