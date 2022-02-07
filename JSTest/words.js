@@ -1,20 +1,20 @@
 class Words {
-    static LIST = [
-        "ABA",
-        "ABANDON",
-        "ABANDONED",
-        "ABATEMENT",
-        "ABBA",
-        "ABBEY",
-        "ABBREVIATION",
-        "ABBREVIATIONS",
-        "ABDOMINAL",
-        "ABIDE",
-        "ABIGAIL",
-        "ABILITIES",
-        "ABILITY",
-        "ABLE",
-    ];
+    // static LIST = [
+    //     "ABA",
+    //     "ABANDON",
+    //     "ABANDONED",
+    //     "ABATEMENT",
+    //     "ABBA",
+    //     "ABBEY",
+    //     "ABBREVIATION",
+    //     "ABBREVIATIONS",
+    //     "ABDOMINAL",
+    //     "ABIDE",
+    //     "ABIGAIL",
+    //     "ABILITIES",
+    //     "ABILITY",
+    //     "ABLE",
+    // ];
 
     // static DICT = new Map();
     // static {
@@ -23,3 +23,20 @@ class Words {
     //     }
     // }
 }
+
+WORDS_LIST = [
+    "ABA",
+    "ABANDON",
+    "ABANDONED",
+    "ABATEMENT",
+    "ABBA",
+    "ABBEY",
+    "ABBREVIATION",
+    "ABBREVIATIONS",
+    "ABDOMINAL",
+    "ABIDE",
+    "ABIGAIL",
+    "ABILITIES",
+    "ABILITY",
+    "ABLE",
+];
