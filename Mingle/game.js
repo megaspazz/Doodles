@@ -10,34 +10,34 @@ class Game {
     static SOLUTION_CORRECT = 2;
 
     checkSolution(guess) {
-        return this.hints.map(hint => Game.#checkHint(hint, guess));
+        return this.hints.map(hint => Game._checkHint(hint, guess));
     }
 
     shuffleHints() {
-        Game.#shuffle(this.hints);
+        Game._shuffle(this.hints);
     }
 
     static generate(filterFn) {
-        return Game.#firstMatch(Game.#shuffle([...Game.#getAllGames()]), filterFn);
+        return Game._firstMatch(Game._shuffle([...Game._getAllGames()]), filterFn);
     }
 
     static generateForLength(length, filterFn) {
-        return Game.#firstMatch(Game.#shuffle([...Game.#getAllGamesByLength()[length]]), filterFn);
+        return Game._firstMatch(Game._shuffle([...Game._getAllGamesByLength()[length]]), filterFn);
     }
 
     static getRandomTemplate() {
-        const games = Game.#getAllGames();
+        const games = Game._getAllGames();
         const idx = ~~(Math.random() * games.length);
-        return games[idx].#createFromTemplate();
+        return games[idx]._createFromTemplate();
     }
 
     static getRandomTemplateForLength(len) {
-        const gamesByLength = Game.#getAllGamesByLength();
+        const gamesByLength = Game._getAllGamesByLength();
         const idx = ~~(Math.random() * gamesByLength[len].length);
-        return gamesByLength[len][idx].#createFromTemplate();
+        return gamesByLength[len][idx]._createFromTemplate();
     }
 
-    static #checkHint(hint, guess) {
+    static _checkHint(hint, guess) {
         if (guess.length !== hint.size) {
             return Game.SOLUTION_WRONG;
         }
@@ -52,9 +52,9 @@ class Game {
         return Game.SOLUTION_WRONG;
     }
 
-    static #allGames = null;
-    static #getAllGames() {
-        if (!Game.#allGames) {
+    static _allGames = null;
+    static _getAllGames() {
+        if (!Game._allGames) {
             let hintsMap = new Map();
             for (const word of Words.LIST) {
                 for (let len = 1; len + 1 < word.length; ++len) {
@@ -70,36 +70,36 @@ class Game {
                     }
                 }
             }
-            Game.#allGames = [];
+            Game._allGames = [];
             for (const [answer, hints] of hintsMap) {
                 const game = new Game(hints, answer);
-                Game.#allGames.push(game);
+                Game._allGames.push(game);
             }
         }
-        return Game.#allGames;
+        return Game._allGames;
     }
 
-    static #allGamesByLength = null;
-    static #getAllGamesByLength() {
-        if (!Game.#allGamesByLength) {
-            Game.#allGamesByLength = [];
-            for (const game of Game.#getAllGames()) {
-                let arr = Game.#allGamesByLength[game.solution.length];
+    static _allGamesByLength = null;
+    static _getAllGamesByLength() {
+        if (!Game._allGamesByLength) {
+            Game._allGamesByLength = [];
+            for (const game of Game._getAllGames()) {
+                let arr = Game._allGamesByLength[game.solution.length];
                 if (!arr) {
                     arr = [];
-                    Game.#allGamesByLength[game.solution.length] = arr;
+                    Game._allGamesByLength[game.solution.length] = arr;
                 }
                 arr.push(game);
             }
         }
-        return Game.#allGamesByLength;
+        return Game._allGamesByLength;
     }
 
-    #createFromTemplate() {
+    _createFromTemplate() {
         return new Game([...this.hints], this.solution);
     }
 
-    static #shuffle(arr) {
+    static _shuffle(arr) {
         for (let i = arr.length - 1; i > 0; --i) {
             let j = ~~(Math.random() * (i + 1));
             [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -107,9 +107,9 @@ class Game {
         return arr;
     }
 
-    static #firstMatch(games, filterFn) {
+    static _firstMatch(games, filterFn) {
         for (const gameTemplate of games) {
-            let g = gameTemplate.#createFromTemplate();
+            let g = gameTemplate._createFromTemplate();
             if (!filterFn || filterFn(g)) {
                 return g;
             }

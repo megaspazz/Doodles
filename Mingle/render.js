@@ -6,9 +6,9 @@ class Render {
     }
 
     drawHints(game) {
-        const [before, after] = Render.#computeSpacing(game.hints);
+        const [before, after] = Render._computeSpacing(game.hints);
         const width = before + game.solution.length + after;
-        const emptyRow = Render.#empty.repeat(width);
+        const emptyRow = Render._empty.repeat(width);
         let buf = [];
         for (let i = 0; i < game.hintsUsed; ++i) {
             const bufOffset = before - game.hints[i].offset;
@@ -16,35 +16,35 @@ class Render {
             for (let j = 0; j < game.hints[i].word.length; ++j) {
                 let c = game.hints[i].word[j];
                 if (j >= game.hints[i].offset && j < game.hints[i].offsetEnd()) {
-                    c = "_";
+                    c = Render._blank;
                 }
                 buf[i][j + bufOffset] = c;
             }
         }
         Log.write(before, after);
         Log.write(buf);
-        divHints.innerHTML = buf.map(row => row.join(Render.#empty)).join("\n\n");
+        divHints.innerHTML = buf.map(row => row.join(Render._empty)).join("\n\n");
     }
 
     drawResult(game, guess) {
         if (guess === game.solution) {
-            this.divWinBanner.innerHTML = "YOU WIN!\n" + Render.#pointingDownEmoji + " Share with your friends " + Render.#pointingDownEmoji;
+            this.divWinBanner.innerHTML = "YOU WIN!\n" + Render._pointingDownEmoji + " Share with your friends " + Render._pointingDownEmoji;
         } else {
-            this.divWinBanner.innerHTML = "ur a loser haha\nthe answer was actually " + game.solution  + "\n" + Render.#pointingDownEmoji + " tell ur \"friends\" below " + Render.#pointingDownEmoji;
+            this.divWinBanner.innerHTML = "ur a loser haha\nthe answer was actually " + game.solution  + "\n" + Render._pointingDownEmoji + " tell ur \"friends\" below " + Render._pointingDownEmoji;
         }
 
         const results = game.checkSolution(guess);
         const usedHints = game.hints.slice(0, game.hintsUsed);
-        const [before, after] = Render.#computeSpacing(usedHints);
+        const [before, after] = Render._computeSpacing(usedHints);
         const width = before + game.solution.length + after;
-        const emptyRow = Render.#paddingEmoji.repeat(width);
+        const emptyRow = Render._paddingEmoji.repeat(width);
         let buf = usedHints.map((hint, i) => {
             let row = Array.from(emptyRow);
             const bufOffset = before - hint.offset;
             for (let j = 0; j < hint.word.length; ++j) {
-                let c = Render.#wordPartEmoji;
+                let c = Render._wordPartEmoji;
                 if (j >= game.hints[i].offset && j < game.hints[i].offsetEnd()) {
-                    c = Render.#resultToEmoji.get(results[i]);
+                    c = Render._resultToEmoji.get(results[i]);
                 }
                 row[j + bufOffset] = c;
             }
@@ -54,7 +54,7 @@ class Render {
         this.divResult.innerHTML = buf.map(row => row.join("")).join("\n");
     }
 
-    static #computeSpacing(hints) {
+    static _computeSpacing(hints) {
         let before = 0;
         let after = 0;
         for (const hint of hints) {
@@ -64,22 +64,22 @@ class Render {
         return [before, after];
     }
 
-    static #empty = " ";
-    static #blank = "_";
+    static _empty = " ";
+    static _blank = "_";
 
-    static #whiteSquareEmoji = "\u2B1C";
-    static #blackSquareEmoji = "\u2B1B";
-    static #redSquareEmoji = String.fromCodePoint(0x1F7E5);
-    static #yellowSquareEmoji = String.fromCodePoint(0x1F7E8);
-    static #greenSquareEmoji = String.fromCodePoint(0x1F7E9);
-    static #pointingDownEmoji = String.fromCodePoint(0x1F447);
+    static _whiteSquareEmoji = "\u2B1C";
+    static _blackSquareEmoji = "\u2B1B";
+    static _redSquareEmoji = String.fromCodePoint(0x1F7E5);
+    static _yellowSquareEmoji = String.fromCodePoint(0x1F7E8);
+    static _greenSquareEmoji = String.fromCodePoint(0x1F7E9);
+    static _pointingDownEmoji = String.fromCodePoint(0x1F447);
 
-    static #paddingEmoji = Render.#blackSquareEmoji;
-    static #wordPartEmoji = Render.#whiteSquareEmoji;
-    static #resultToEmoji = new Map();
+    static _paddingEmoji = Render._blackSquareEmoji;
+    static _wordPartEmoji = Render._whiteSquareEmoji;
+    static _resultToEmoji = new Map();
     static {
-        Render.#resultToEmoji.set(Game.SOLUTION_WRONG, Render.#redSquareEmoji);
-        Render.#resultToEmoji.set(Game.SOLUTION_OTHER_WORD, Render.#yellowSquareEmoji);
-        Render.#resultToEmoji.set(Game.SOLUTION_CORRECT, Render.#greenSquareEmoji);
+        Render._resultToEmoji.set(Game.SOLUTION_WRONG, Render._redSquareEmoji);
+        Render._resultToEmoji.set(Game.SOLUTION_OTHER_WORD, Render._yellowSquareEmoji);
+        Render._resultToEmoji.set(Game.SOLUTION_CORRECT, Render._greenSquareEmoji);
     }
 }
