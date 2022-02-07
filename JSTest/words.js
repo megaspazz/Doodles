@@ -16,10 +16,10 @@ class Words {
         "ABLE",
     ];
 
-    static DICT = new Map();
-    static {
-        for (const word of Words.LIST) {
-            Words.DICT.set(word, true);
-        }
-    }
+    // static DICT = new Map();
+    // static {
+    //     for (const word of Words.LIST) {
+    //         Words.DICT.set(word, true);
+    //     }
+    // }
 }
