@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JS Test</title>
+    </head>
+    <body>
+        <h1>JS Test</h1>
+        <h6>version 0.0.1</h6>
+        <script type="text/javascript">
+            function log() {
+                let divLine = document.createElement("div");
+                divLine.innerText = "[ " + new Date(Date.now()).toLocaleString() + " ]\n" + [...arguments].join("\n");
+                divLine.style.padding = "6px";
+                document.getElementsByTagName("body")[0].appendChild(divLine);
+            }
+
+            window.onload = function() {
+                log("hi");
+                log(window.location.href);
+            }
+        </script>
+    </body>
+</html>
