@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>JS Test</h1>
-        <h6>version 0.0.15</h6>
+        <h6>version 0.0.16</h6>
 
         <div style="font-family: Helvetica, sans-serif;">
             <h2>Instructions</h2>
@@ -42,8 +42,8 @@
                 let testClass = new MyClass();
                 testClass.test("abc 123");
                 
-                let idx = ~~(Math.random() * Words.LIST.length);
-                log("class version: " + Words.LIST[idx]);
+                // let idx = ~~(Math.random() * Words.LIST.length);
+                // log("class version: " + Words.LIST[idx]);
 
                 let someClass = new SomeClass();
                 someClass.say("pls work dude");
@@ -51,11 +51,12 @@
                 let wlIdx = ~~(Math.random() * WORDS_LIST.length);
                 log("WORDS_LIST version: " + WORDS_LIST[wlIdx]);
 
-                log(Words.testStatic("hello"));
+                // log(Words.testStatic("hello"));
 
-                let w = new Words();
-                log(w.testPrivateStatic("hello"));
-                log(w.testPrivateStatic("world"));
+                // let w = new Words();
+                // log(w.testPrivateStatic("hello"));
+                // log(w.testPrivateStatic("world"));
+                log("success");
             }
 
             class MyClass {
