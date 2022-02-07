@@ -13,6 +13,10 @@ class Game {
         return this.hints.map(hint => Game.#checkHint(hint, guess));
     }
 
+    shuffleHints() {
+        Game.#shuffle(this.hints);
+    }
+
     static generate(filterFn) {
         return Game.#firstMatch(Game.#shuffle([...Game.#getAllGames()]), filterFn);
     }

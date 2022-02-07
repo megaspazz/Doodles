@@ -1,6 +1,6 @@
 class Log {
-    static #CONSOLE = true;
-    static #DOCUMENT = true;
+    static #CONSOLE = false;
+    static #DOCUMENT = false;
 
     static write() {
         if (Log.#CONSOLE) {

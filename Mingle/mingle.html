@@ -29,17 +29,23 @@
             let game;
             let render;
 
-            document.getElementsByTagName("body")[0].append("please render something in iOS...");
-
             window.onload = function() {
                 Log.write("start");
 
                 game = Game.generate(g => {
                     return g.hints.length >= 3;
                 });
+                game.shuffleHints();
+                // Coarsely sort by difficulty of hint.
+                // const score = (hint) => {
+                //     const before = hint.offset;
+                //     const after = hint.word.length - hint.offsetEnd();
+                //     return (before + 1) * (after + 1);
+                // };
+                // game.hints.sort((a, b) => {
+                //     return score(a) - score(b);
+                // });
                 Log.write(game);
-                console.log(game);
-                document.getElementsByTagName("body")[0].append("ready to go!");
 
                 const divHints = document.getElementById("divHints");
                 const divWinBanner = document.getElementById("divWinBanner");

@@ -23,10 +23,7 @@ class Render {
         }
         Log.write(before, after);
         Log.write(buf);
-        // this.divHints.innerHTML = "";
-        // let div = document.createElement("div");
         divHints.innerHTML = buf.map(row => row.join(Render.#empty)).join("\n\n");
-        // this.divHints.appendChild(div);
     }
 
     drawResult(game, guess) {
