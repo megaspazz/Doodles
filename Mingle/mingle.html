@@ -3,15 +3,15 @@
     <head>
         <title>Mingle - Word Game</title>
 
-        <script src="game.js" type="text/javascript"></script>
-        <script src="hint.js" type="text/javascript"></script>
-        <script src="log.js" type="text/javascript"></script>
-        <script src="render.js" type="text/javascript"></script>
-        <script src="words.js" type="text/javascript"></script>
+        <!-- <script src="game.js" type="text/javascript"></script> -->
+        <!-- <script src="hint.js" type="text/javascript"></script> -->
+        <!-- <script src="log.js" type="text/javascript"></script> -->
+        <!-- <script src="render.js" type="text/javascript"></script> -->
+        <!-- <script src="words.js" type="text/javascript"></script> -->
     </head>
     <body>
         <h1>M _ N G L E</h1>
-        <h6>version 0.0.29*</h6>
+        <h6>version 0.0.30*</h6>
         <div style="font-family: Helvetica, sans-serif;">
             <h2>Instructions</h2>
             <ul>
@@ -38,7 +38,27 @@
             let game;
             let render;
 
+            const imports = [
+                "log.js",
+            ];
+            let importsRemaining = imports.length;
+
             window.onload = function() {
+                let headElt = document.getElementsByTagName("head")[0];
+                for (const path of imports) {
+                    let scriptElt = document.createElement("script");
+                    scriptElt.type = "text/javascript";
+                    scriptElt.src = path;
+                    scriptElt.onload = scriptLoaded;
+                    headElt.appendChild(scriptElt);
+                }
+            }
+
+            function scriptLoaded() {
+                if (--importsRemaining > 0) {
+                    return;
+                }
+                
                 console.log(typeof Log);
                 if (typeof Log !== "undefined") {
                     console.log(typeof Log.write);
