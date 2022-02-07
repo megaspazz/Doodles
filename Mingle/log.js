@@ -7,10 +7,15 @@ class Log {
     // static divOutput = null;
 }
 
+Log._CONSOLE = true;
+Log._DOCUMENT = true;
+
+Log.divOutput = null;
+
 Log.write = function() {
-    // if (Log._CONSOLE) {
-    //     console.log(...arguments)
-    // }
+    if (Log._CONSOLE) {
+        console.log(...arguments)
+    }
 
     // if (Log._DOCUMENT) {
     //     if (!Log.divOutput) {
