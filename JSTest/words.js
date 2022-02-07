@@ -19,6 +19,14 @@ class Words {
     //     "ABLE",
     // ];
 
+    static testPrivateStatic(x) {
+        return Words.#privateStatic(x);
+    }
+
+    static #privateStatic(x) {
+        return x + " <-|->" + x;
+    }
+
     // static DICT = new Map();
     // static {
     //     for (const word of Words.LIST) {
