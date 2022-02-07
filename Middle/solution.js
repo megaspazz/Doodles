@@ -1,8 +1,4 @@
 class Solution {
-	static NOT_EXIST = 0;
-	static NOT_FOUND = 1;
-	static FOUND = 2;
-	
 	constructor(word, middleIndex, state, prefixCircles, suffixCircles) {
 		this.word = word;
 		this.middleIndex = middleIndex;
@@ -19,3 +15,7 @@ class Solution {
 		return this.word.substring(middleIndex + 1);
 	}
 }
+
+Solution.NOT_EXIST = 0;
+Solution.NOT_FOUND = 1;
+Solution.FOUND = 2;

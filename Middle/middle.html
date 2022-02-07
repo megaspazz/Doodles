@@ -14,12 +14,14 @@
 		</div>
 		<svg id="svgGame"></svg>
 		<div>
+			<label for="txtInput">Guess a word</label>
 			<input id="txtInput" type="text" onkeydown="processInput();" autofocus></input>
 		</div>
 		<div id="divWords"></div>
 		
 		<script src="words.js"></script>
 		<script src="game.js"></script>
+		<script src="render.js"></script>
 		<script src="solution.js"></script>
 		<script src="letter_circle.js"></script>
 		<script src="word_circle.js"></script>
@@ -74,15 +76,20 @@
 				txtInput.onkeydown = processInput;
 			}
 			
-			window.onload = function() {
+			let render;
+			let game;
 			
-				game = Game.generate(5, 5);
-				render = new Render(document.getElementById("svgGame"));
+			//let game = new Game("HELL", "O", "RLDW");
+			
+			window.onload = function() {
 				let svgGame = document.getElementById("svgGame");
 				svgGame.setAttribute("width", WIDTH);
 				svgGame.setAttribute("height", HEIGHT);
-				
+
+				game = Game.generate(PREFIX_LENGTH, SUFFIX_LENGTH);
 				log(game);
+
+				render = new Render(document.getElementById("svgGame"));
 				render.updateGame(game);
 				
 				let txtInput = document.getElementById("txtInput");
@@ -102,161 +109,6 @@
 					txtInput.value = "";
 				}
 			}
-			
-			class Render {
-				constructor(svgGame) {
-					this.svgGame = svgGame;
-				}
-				
-				updateGame(game) {
-					this.updateCircles(game);
-					this.updateWords(game);
-				}
-				
-				updateCircles(game) {
-					log(game);
-					this.svgGame.innerHTML = "";
-					this.#drawCircle(game.prefixCircle.letterCircles, WIDTH / 2 - RADIUS, HEIGHT / 2, RADIUS, 2 * Math.PI / (game.prefix.length + 1), 2 * Math.PI / (game.prefix.length + 1));
-					this.#drawCircle(game.suffixCircle.letterCircles, WIDTH / 2 + RADIUS, HEIGHT / 2, RADIUS, Math.PI + 2 * Math.PI / (game.suffix.length + 1), 2 * Math.PI / (game.suffix.length + 1));
-					let middleLetterCircle = createSVGElement("circle", {
-						"cx": WIDTH / 2,
-						"cy": HEIGHT / 2,
-						"r": LETTER_RADIUS + MIDDLE_BORDER_SIZE / 2,
-						"style": style({
-							"fill": "DeepSkyBlue",
-							"stroke": "DodgerBlue",
-							"stroke-width": MIDDLE_BORDER_SIZE,
-						}),
-					});
-					let middleLetterText = createSVGElement("text", {
-						"x": WIDTH / 2,
-						"y": HEIGHT / 2,
-						"font-size": FONT_SIZE,
-						"font-family": FONT_FAMILY,
-						"text-anchor": "middle",
-						"dominant-baseline": "middle",
-					}, game.middle);
-					svgGame.appendChild(middleLetterCircle);
-					svgGame.appendChild(middleLetterText);
-				}
-			
-				updateWords(game) {
-					let divWords = document.getElementById("divWords");
-					divWords.innerHTML = "";
-					game.solutions.forEach((solutionsForLen, len) => {
-						let div = document.createElement("div");
-						let header = document.createElement("h2");
-						let ol = document.createElement("ol");
-						let wordsRemaining = 0;
-						solutionsForLen.forEach((solution, word) => {
-							let li = document.createElement("li");
-							switch (solution.state) {
-								case Solution.NOT_FOUND: {
-									li.innerHTML = "?".repeat(len);
-									++wordsRemaining;
-									break;
-								}
-								case Solution.FOUND: {
-									li.innerHTML = solution.word;
-									log(solution);
-									break;
-								}
-							}
-							ol.appendChild(li);
-						});
-						header.innerHTML = len + "-letter words (" + wordsRemaining + " remaining)";
-						div.appendChild(header);
-						div.appendChild(ol);
-						divWords.appendChild(div);
-					});
-				}
-				
-				#drawCircle(letterCircles, x0, y0, radius, startRads, deltaRads) {
-					let outerCircle = createSVGElement("circle", {
-						"cx": x0,
-						"cy": y0,
-						"r": radius,
-						"style": style({
-							"fill": "LightSkyBlue",
-						}),
-					});
-					this.svgGame.prepend(outerCircle);
-					for (const [i, letterCircle] of letterCircles.entries()) {
-						let x = x0 + radius * Math.cos(startRads + i * deltaRads);
-						let y = y0 + radius * Math.sin(startRads + i * deltaRads);
-						let letter = letterCircle.letter;
-						log(i, letter, letterCircle, x0, y0, radius, startRads, deltaRads);
-						let rgb = Render.#colorFor(letterCircle);
-						let borderWidth = 0;
-						// TODO: refactor into function
-						if (letterCircle.isCompleted()) {
-							borderWidth = Render.#borderWidth;
-						}
-						let letterCircleElement = createSVGElement("circle", {
-							"cx": x,
-							"cy": y,
-							"r": LETTER_RADIUS + borderWidth / 2,
-							"style": style({
-								"fill": "rgb(" + rgb.join(", ") + ")",
-								"stroke": "rgb(" + Render.#borderColor.join(", ") + ")",
-								"stroke-width": borderWidth,
-							}),
-						});
-						let letterTextElement = createSVGElement("text", {
-							"x": x,
-							"y": y,
-							"font-size": FONT_SIZE,
-							"font-family": FONT_FAMILY,
-							"text-anchor": "middle",
-							"dominant-baseline": "middle",
-						}, letter);
-						this.svgGame.appendChild(letterCircleElement);
-						this.svgGame.appendChild(letterTextElement);
-					}
-				}
-				
-				static #colorFor(letterCircle) {
-					let percentile = letterCircle.completionProgress();
-					let r = ~~Render.#rangePercentile(Render.#startR, Render.#endR, percentile);
-					let g = ~~Render.#rangePercentile(Render.#startG, Render.#endG, percentile);
-					let b = ~~Render.#rangePercentile(Render.#startB, Render.#endB, percentile);
-					return [r, g, b];
-				}
-				
-				static #rangePercentile(low, high, percentile) {
-					return low + (high - low) * percentile;
-				}
-				
-				/*
-				static #startR = 219;
-				static #startG = 112;
-				static #startB = 147;
-				
-				static #endR = 152;
-				static #endG = 251;
-				static #endB = 152;
-				*/
-				
-				static #startR = 223;
-				static #startG = 223;
-				static #startB = 223;
-				
-				static #endR = 152;
-				static #endG = 251;
-				static #endB = 152;
-				
-				static #borderR = 34;
-				static #borderG = 139;
-				static #borderB = 34;
-				static #borderColor = [Render.#borderR, Render.#borderG, Render.#borderB];
-				
-				static #borderWidth = 4;
-			}
-			
-			let render = new Render(document.getElementById("svgGame"));
-			let game = Game.generate(PREFIX_LENGTH, SUFFIX_LENGTH);
-			
-			//let game = new Game("HELL", "O", "RLDW");
 		</script>
 	</body>
 </html>
