@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>JS Test</h1>
-        <h6>version 0.0.9</h6>
+        <h6>version 0.0.10</h6>
 
         <div style="font-family: Helvetica, sans-serif;">
             <h2>Instructions</h2>
@@ -31,8 +31,9 @@
 
         <!-- <script type="text/javascript" src="log.js"></script> -->
         <script type="text/javascript" src="not-class.js"></script>
+        <script type="text/javascript" src="some-class.js"></script>
         <script type="text/javascript" src="spread.js"></script>
-        <script type="text/javascript" src="words.js"></script>
+        <!-- <script type="text/javascript" src="words.js"></script> -->
         <script type="text/javascript">
             window.onload = function() {
                 log("hi");
@@ -41,8 +42,11 @@
                 let testClass = new MyClass();
                 testClass.test("abc 123");
                 
-                let idx = ~~(Math.random() * Words.LIST.length);
-                log(Words.LIST[idx]);
+                // let idx = ~~(Math.random() * Words.LIST.length);
+                // log(Words.LIST[idx]);
+
+                let someClass = new SomeClass();
+                someClass.say("pls work dude");
             }
 
             class MyClass {
