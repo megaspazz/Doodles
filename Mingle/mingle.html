@@ -30,7 +30,6 @@
             let render;
 
             window.onload = function() {
-
                 Log.write("start");
 
                 game = Game.generate(g => {
@@ -38,6 +37,7 @@
                 });
                 Log.write(game);
                 console.log(game);
+                document.getElementsByTagName("body")[0].append("ready to go!");
 
                 const divHints = document.getElementById("divHints");
                 const divWinBanner = document.getElementById("divWinBanner");
