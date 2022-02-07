@@ -11,7 +11,7 @@
     </head>
     <body>
         <h1>M _ N G L E</h1>
-        <h6>version 0.0.28*</h6>
+        <h6>version 0.0.29*</h6>
         <div style="font-family: Helvetica, sans-serif;">
             <h2>Instructions</h2>
             <ul>
@@ -39,12 +39,16 @@
             let render;
 
             window.onload = function() {
+                console.log(typeof Log);
+                if (typeof Log !== "undefined") {
+                    console.log(typeof Log.write);
+                }
                 // if (Log && Log.write) {
                 //     console.log("it's good");
                 // } else {
                 //     console.log("it's bad");
                 // }
-                // Log.write("start");
+                Log.write("start");
 
                 // game = Game.generate(g => {
                 //     return g.hints.length >= 3;
@@ -80,7 +84,7 @@
 
                 // Log.write(document.getElementsByTagName("html")[0].innerHTML);
 
-                document.getElementById("divWinBanner").innerHTML = "all imported 123456...";
+                document.getElementById("divWinBanner").innerHTML = "all imported 123456789...";
             }
 
             function handleInput(e) {
