@@ -30,12 +30,14 @@
             let render;
 
             window.onload = function() {
+
                 Log.write("start");
 
                 game = Game.generate(g => {
                     return g.hints.length >= 3;
                 });
                 Log.write(game);
+                console.log(game);
 
                 const divHints = document.getElementById("divHints");
                 const divWinBanner = document.getElementById("divWinBanner");
@@ -53,7 +55,7 @@
 
                 nextHint();
                 render.drawHints(game);
-                
+
                 Log.write(document.getElementsByTagName("html")[0].innerHTML);
             }
 
