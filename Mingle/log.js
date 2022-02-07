@@ -5,9 +5,9 @@ class Log {
     static divOutput = null;
 
     static write() {
-        if (Log._CONSOLE) {
-            console.log(...arguments)
-        }
+        // if (Log._CONSOLE) {
+        //     console.log(...arguments)
+        // }
 
         // if (Log._DOCUMENT) {
         //     if (!Log.divOutput) {
