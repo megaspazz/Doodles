@@ -24,6 +24,23 @@ class Words {
     // }
 }
 
+Words.LIST = [
+    "ABA",
+    "ABANDON",
+    "ABANDONED",
+    "ABATEMENT",
+    "ABBA",
+    "ABBEY",
+    "ABBREVIATION",
+    "ABBREVIATIONS",
+    "ABDOMINAL",
+    "ABIDE",
+    "ABIGAIL",
+    "ABILITIES",
+    "ABILITY",
+    "ABLE",
+];
+
 WORDS_LIST = [
     "ABA",
     "ABANDON",
