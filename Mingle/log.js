@@ -1,3 +1,5 @@
+console.log("in log.js");
+
 class Log {
     // static _CONSOLE = true;
     // static _DOCUMENT = true;
@@ -22,3 +24,5 @@ Log.write = function() {
     //     Log.divOutput.appendChild(divLine);
     // }
 }
+
+console.log("out log.js");
