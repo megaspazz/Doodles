@@ -6,7 +6,7 @@ class WordCircle {
 		this.letterCirclesByLetter = {};
 		
 		[...word].forEach(c => {
-			this.#addLetterCircle(new LetterCircle(c, 0));
+			this._addLetterCircle(new LetterCircle(c, 0));
 		});
 	}
 	
@@ -24,7 +24,7 @@ class WordCircle {
 		return solutionCircles;
 	}
 	
-	#addLetterCircle(letterCircle) {
+	_addLetterCircle(letterCircle) {
 		this.letterCircles.push(letterCircle);
 		
 		let arr = this.letterCirclesByLetter[letterCircle.letter];
