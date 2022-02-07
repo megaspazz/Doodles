@@ -16,7 +16,8 @@ class Log {
                 document.getElementsByTagName("body")[0].appendChild(Log.divOutput);
             }
             let divLine = document.createElement("div");
-            divLine.innerText = "[ " + new Date(Date.now()).toLocaleString() + " ]\n" + [...arguments].join("\n");
+            // divLine.innerText = "[ " + new Date(Date.now()).toLocaleString() + " ]\n" + [...arguments].join("\n");
+            divLine.innerText = "wrote it";
             divLine.style.margin = "6px";
             Log.divOutput.appendChild(divLine);
         }
