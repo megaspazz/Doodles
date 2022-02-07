@@ -15,6 +15,7 @@ class Log {
             }
             let divLine = document.createElement("div");
             divLine.innerText = "[ " + new Date(Date.now()).toLocaleString() + " ]\n" + [...arguments].join("\n");
+            divLine.style.margin = "6px";
             Log.divOutput.appendChild(divLine);
         }
     }

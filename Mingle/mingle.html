@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>M _ N G L E</h1>
-        <h6>version 0.0.11*</h6>
+        <h6>version 0.0.12*</h6>
         <div style="font-family: Helvetica, sans-serif;">
             <h2>Instructions</h2>
             <ul>
@@ -30,7 +30,7 @@
 
         <!-- <script src="game.js" type="text/javascript"></script> -->
         <!-- <script src="hint.js" type="text/javascript"></script> -->
-        <script src="log.js" type="text/javascript"></script>
+        <!-- <script src="log.js" type="text/javascript"></script> -->
         <!-- <script src="render.js" type="text/javascript"></script> -->
         <!-- <script src="words.js" type="text/javascript"></script> -->
         <script type="text/javascript">
@@ -38,7 +38,7 @@
             let render;
 
             window.onload = function() {
-                Log.write("start");
+                // Log.write("start");
 
                 // game = Game.generate(g => {
                 //     return g.hints.length >= 3;
@@ -53,40 +53,42 @@
                 // game.hints.sort((a, b) => {
                 //     return score(a) - score(b);
                 // });
-                Log.write(game);
+                // Log.write(game);
 
                 // const divHints = document.getElementById("divHints");
                 // const divWinBanner = document.getElementById("divWinBanner");
                 // const divResult = document.getElementById("divResult");
                 // render = new Render(divHints, divWinBanner, divResult);
-                Log.write("render ready");
+                // Log.write("render ready");
 
                 const txtInput = document.getElementById("txtInput");
                 txtInput.onkeydown = handleInput;
 
                 const btnHint = document.getElementById("btnHint");
                 btnHint.onclick = nextHint;
+
+                document.getElementById("divWinBanner").innerHTML = "testing 123...";
                 
-                Log.write("events ready");
+                // Log.write("events ready");
 
                 // nextHint();
                 // render.drawHints(game);
 
-                Log.write(document.getElementsByTagName("html")[0].innerHTML);
+                // Log.write(document.getElementsByTagName("html")[0].innerHTML);
             }
 
             function handleInput(e) {
-                if (e.key === "Enter") {
-                    const txtInput = document.getElementById("txtInput");
-                    const divInput = document.getElementById("divInput");
-                    const divResult = document.getElementById("divResult");
-                    const btnHint = document.getElementById("btnHint");
-                    const guess = txtInput.value.toUpperCase();
-                    render.drawResult(game, guess);
-                    txtInput.disabled = true;
-                    btnHint.disabled = true;
+                // if (e.key === "Enter") {
+                //     const txtInput = document.getElementById("txtInput");
+                //     const divInput = document.getElementById("divInput");
+                //     const divResult = document.getElementById("divResult");
+                //     const btnHint = document.getElementById("btnHint");
+                //     const guess = txtInput.value.toUpperCase();
+                //     render.drawResult(game, guess);
+                //     txtInput.disabled = true;
+                //     btnHint.disabled = true;
                     
-                }
+                // }
             }
 
             function nextHint() {
