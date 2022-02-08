@@ -4,6 +4,7 @@
 	</head>
 	<body>
 		<h1>M I [D] D L E</h1>
+        <h6>version 0.0.1</h6>
 		<div>
 			<p>
 				Form as many words as you can by using some letters from the left half, the middle letter, and some letters from the right half.
@@ -95,19 +96,56 @@
 				let txtInput = document.getElementById("txtInput");
 				txtInput.onkeydown = processInput;
 			}
+
+			const FLASH_COLOR_CORRECT = "LimeGreen";
+			const FLASH_COLOR_WRONG = "Tomato";
 			
 			function processInput(e) {
 				if (e.key == "Enter") {
 					let txtInput = document.getElementById("txtInput");
-					let word = txtInput.value.toUpperCase();
-					if (game.checkAndUpdate(word)) {
-						render.updateGame(game);
-						log("BIG winner: " + word);
-					} else {
-						log("BIG loser: " + word);
+					let word = sanitizeInput(txtInput.value);
+					if (word.length > 0) {
+						if (game.checkAndUpdate(word)) {
+							render.updateGame(game);
+							flashInput(FLASH_COLOR_CORRECT);
+							log("BIG winner: " + word);
+						} else {
+							flashInput(FLASH_COLOR_WRONG);
+							log("BIG loser: " + word);
+						}
+						txtInput.value = "";
 					}
-					txtInput.value = "";
 				}
+			}
+
+            const CHAR_CODE_UPPER_A = "A".charCodeAt(0);
+            const CHAR_CODE_UPPER_Z = "Z".charCodeAt(0);
+
+            function isUpperAlpha(c) {
+                let codePoint = c.codePointAt(0);
+                return CHAR_CODE_UPPER_A <= codePoint && codePoint <= CHAR_CODE_UPPER_Z;
+            }
+
+            function sanitizeInput(guess) {
+                return [...guess.toUpperCase()].filter(c => isUpperAlpha(c)).join("");
+            }
+
+			const FLASH_DURATION_MS = 720;
+			let flashTimeoutID = 0;
+			let flashOriginalColor;
+			
+			function flashInput(color) {
+				let txtInput = document.getElementById("txtInput");
+				if (flashTimeoutID) {
+					clearTimeout(flashTimeoutID);
+				} else {
+					flashOriginalColor = txtInput.style.backgroundColor;
+				}
+				txtInput.style.backgroundColor = color;
+				flashTimeoutID = setTimeout(() => {
+					txtInput.style.backgroundColor = flashOriginalColor;
+					flashTimeoutID = 0;
+				}, FLASH_DURATION_MS);
 			}
 		</script>
 	</body>
