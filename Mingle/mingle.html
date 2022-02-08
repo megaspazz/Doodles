@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>M _ N G L E</h1>
-        <h6>version 0.0.40</h6>
+        <h6>version 0.0.41</h6>
         <div style="font-family: Helvetica, sans-serif;">
             <h2>Instructions</h2>
             <ul>
@@ -81,8 +81,9 @@
                     const divInput = document.getElementById("divInput");
                     const divResult = document.getElementById("divResult");
                     const btnHint = document.getElementById("btnHint");
-                    const guess = txtInput.value.toUpperCase();
+                    const guess = sanitizeInput(txtInput.value);
                     render.drawResult(game, guess);
+                    txtInput.value = guess;
                     txtInput.disabled = true;
                     btnHint.disabled = true;
                 }
@@ -101,6 +102,18 @@
             function focusInput() {
                 const txtInput = document.getElementById("txtInput");
                 txtInput.focus();
+            }
+
+            const charCodeUpperA = "A".charCodeAt(0);
+            const charCodeUpperZ = "Z".charCodeAt(0);
+
+            function isUpperAlpha(c) {
+                let codePoint = c.codePointAt(0);
+                return charCodeUpperA <= codePoint && codePoint <= charCodeUpperZ;
+            }
+
+            function sanitizeInput(guess) {
+                return [...guess.toUpperCase()].filter(c => isUpperAlpha(c)).join("");
             }
         </script>
     </body>
