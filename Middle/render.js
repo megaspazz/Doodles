@@ -11,8 +11,8 @@ class Render {
     updateCircles(game) {
         log(game);
         this.svgGame.innerHTML = "";
-        this._drawCircle(game.prefixCircle.letterCircles, WIDTH / 2 - RADIUS, HEIGHT / 2, RADIUS, 2 * Math.PI / (game.prefix.length + 1), 2 * Math.PI / (game.prefix.length + 1));
-        this._drawCircle(game.suffixCircle.letterCircles, WIDTH / 2 + RADIUS, HEIGHT / 2, RADIUS, Math.PI + 2 * Math.PI / (game.suffix.length + 1), 2 * Math.PI / (game.suffix.length + 1));
+        this._drawCircle(game.getPrefixLetterCirclesInSetOrder(), WIDTH / 2 - RADIUS, HEIGHT / 2, RADIUS, 2 * Math.PI / (game.prefix.length + 1), 2 * Math.PI / (game.prefix.length + 1));
+        this._drawCircle(game.getSuffixLetterCirclesInSetOrder(), WIDTH / 2 + RADIUS, HEIGHT / 2, RADIUS, Math.PI + 2 * Math.PI / (game.suffix.length + 1), 2 * Math.PI / (game.suffix.length + 1));
         let middleLetterCircle = createSVGElement("circle", {
             "cx": WIDTH / 2,
             "cy": HEIGHT / 2,
@@ -38,12 +38,15 @@ class Render {
     updateWords(game) {
         let divWords = document.getElementById("divWords");
         divWords.innerHTML = "";
-        game.solutions.forEach((solutionsForLen, len) => {
+        for (const [len, solutionsForLen] of game.solutions.entries()) {
+            if (!solutionsForLen) {
+                continue;
+            }
             let div = document.createElement("div");
             let header = document.createElement("h2");
             let ol = document.createElement("ol");
             let wordsRemaining = 0;
-            solutionsForLen.forEach((solution, word) => {
+            solutionsForLen.forEach((solution) => {
                 let li = document.createElement("li");
                 switch (solution.state) {
                     case Solution.NOT_FOUND: {
@@ -63,7 +66,7 @@ class Render {
             div.appendChild(header);
             div.appendChild(ol);
             divWords.appendChild(div);
-        });
+        };
     }
     
     _drawCircle(letterCircles, x0, y0, radius, startRads, deltaRads) {

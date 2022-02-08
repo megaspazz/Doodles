@@ -1,10 +1,10 @@
 class Solution {
-	constructor(word, middleIndex, state, prefixCircles, suffixCircles) {
+	constructor(word, middleIndex, state, prefixCircleIndices, suffixCircleIndices) {
 		this.word = word;
 		this.middleIndex = middleIndex;
 		this.state = state;
-		this.prefixCircles = prefixCircles;
-		this.suffixCircles = suffixCircles;
+		this.prefixCircleIndices = prefixCircleIndices;
+		this.suffixCircleIndices = suffixCircleIndices;
 	}
 	
 	prefix() {

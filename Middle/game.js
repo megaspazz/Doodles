@@ -1,14 +1,18 @@
 class Game {
 	constructor(prefix, middle, suffix) {
-		this.prefix = prefix;
-		this.middle = middle;
-		this.suffix = suffix;
+		this.prefix = prefix || "";
+		this.middle = middle || "";
+		this.suffix = suffix || "";
 		
-		this.prefixFreq = Game._makeFreq(prefix);
-		this.suffixFreq = Game._makeFreq(suffix);
+		this.prefixFreq = Game._makeFreq(this.prefix);
+		this.suffixFreq = Game._makeFreq(this.suffix);
 		
-		this.prefixCircle = new WordCircle(prefix);
-		this.suffixCircle = new WordCircle(suffix);
+		this.prefixCircle = new WordCircle(this.prefix);
+		this.suffixCircle = new WordCircle(this.suffix);
+
+		this.prefixCircleOrder = Game._shuffle(Game._range(0, this.prefixCircle.letterCircles.length));
+		this.suffixCircleOrder = Game._shuffle(Game._range(0, this.suffixCircle.letterCircles.length));
+
 		this.solutions = [];
 		WORDS_LIST.forEach(w => {
 			let middleIndex = this.validate(w);
@@ -20,30 +24,33 @@ class Game {
 				}
 				let wPrefix = w.substring(0, middleIndex);
 				let wSuffix = w.substring(middleIndex + 1);
-				let prefixCircles = this.prefixCircle.addSolution(wPrefix);
-				let suffixCircles = this.suffixCircle.addSolution(wSuffix);
-				words.set(w, new Solution(w, middleIndex, Solution.NOT_FOUND, prefixCircles, suffixCircles));
+				let prefixCircleIndices = this.prefixCircle.addSolution(wPrefix);
+				let suffixCircleIndices = this.suffixCircle.addSolution(wSuffix);
+				words.set(w, new Solution(w, middleIndex, Solution.NOT_FOUND, prefixCircleIndices, suffixCircleIndices));
 			}
 		});
-		Game._shuffle(this.prefixCircle.letterCircles);
-		Game._shuffle(this.suffixCircle.letterCircles);
 	}
 	
-	checkAndUpdate(word) {
+	getStateAndUpdate(word) {
 		let solution = this.solutions[word.length]?.get(word);
-		if (!solution || solution.state != Solution.NOT_FOUND) {
+		if (!solution) {
+			return Solution.NOT_EXIST;
+		}
+		if (solution.state == Solution.FOUND) {
 			log("loser: " + word);
-			return false;
+			return Solution.FOUND;
 		}
 		solution.state = Solution.FOUND;
 		log("yo");
-		log(solution.prefixCircles.concat(solution.suffixCircles));
-		for (const letterCircle of solution.prefixCircles.concat(solution.suffixCircles)) {
+		let prefixCircles = Game._getCircles(this.prefixCircle, solution.prefixCircleIndices);
+		let suffixCircles = Game._getCircles(this.suffixCircle, solution.suffixCircleIndices);
+		log(prefixCircles.concat(suffixCircles));
+		for (const letterCircle of prefixCircles.concat(suffixCircles)) {
 			++letterCircle.currFreq;
 			log(letterCircle);
 		}
 		log("winner: " + word, solution);
-		return true;
+		return Solution.NOT_FOUND;
 	}
 	
 	validate(word) {
@@ -53,6 +60,14 @@ class Game {
 			}
 		}
 		return -1;
+	}
+
+	getPrefixLetterCirclesInSetOrder() {
+		return Game._getInSetOrder(this.prefixCircle.letterCircles, this.prefixCircleOrder);
+	}
+
+	getSuffixLetterCirclesInSetOrder() {
+		return Game._getInSetOrder(this.suffixCircle.letterCircles, this.suffixCircleOrder);
 	}
 }
 	
@@ -113,6 +128,17 @@ Game.generate = function(prefixSize, suffixSize) {
 		}
 	}
 }
+
+Game.serializer = new Serializer();
+Game.serializer.addType(Game);
+Game.serializer.addType(LetterCircle);
+Game.serializer.addType(Solution);
+Game.serializer.addType(WordCircle);
+Game.serializer.addType(
+	Map,
+	(_, v) => [...v],
+	(_, data) => new Map(data),
+);
 
 Game._makeFreq = function(word) {
 	return Game._updateFreq({}, word);
@@ -180,4 +206,22 @@ Game._freqToArray = function(freq) {
 		}
 	}
 	return arr;
+}
+
+Game._SERIALIZE_TYPE_MAP = "MAP";
+
+Game._range = function(low, high) {
+	let arr = [];
+	for (let i = low; i < high; ++i) {
+		arr.push(i);
+	}
+	return arr;
+}
+
+Game._getCircles = function(circle, indices) {
+	return indices.map(i => circle.letterCircles[i]);
+}
+
+Game._getInSetOrder = function(arr, indices) {
+	return indices.map(i => arr[i]);
 }

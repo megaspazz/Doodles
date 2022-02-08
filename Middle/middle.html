@@ -4,14 +4,30 @@
 	</head>
 	<body>
 		<h1>M I [D] D L E</h1>
-        <h6>version 0.0.1</h6>
+        <h6>version 0.0.2</h6>
 		<div>
-			<p>
-				Form as many words as you can by using some letters from the left half, the middle letter, and some letters from the right half.
-			</p>
-			<p>
-				Refresh the page to get a new puzzle.
-			</p>
+			<h2>How to Play</h2>
+			<ul>
+				<li>Form as many words as you can by using some letters from the left half, the middle letter, and some letters from the right half.</li>
+				<li>Each letter can only be used once per word.</li>
+				<li>Type a word to guess and press the Enter key to submit a guess.</li>
+				<li>It will flash green for a correct guess, yellow for one that you've already guessed, and red for a wrong guess.</li>
+				<li>Refresh the page to get a new puzzle.</li>
+				<li>
+					If you get stuck, here are some tips:
+					<ul>
+						<li>Letters will fill in from gray to green the more you use them.  When you've found all words using a letter, it will get a solid green border.</li>
+						<li>Words you've found are displayed in alphabetical order.</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div>
+			<input id="btnSave" type="button" value="Save"></input>
+			<input id="btnCopy" type="button" value="Copy"></input>
+			<input id="txtSerializedGame" type="text"></input>
+			<input id="btnPaste" type="button" value="Paste"></input>
+			<input id="btnLoad" type="button" value="Load"></input>
 		</div>
 		<svg id="svgGame"></svg>
 		<div>
@@ -20,14 +36,18 @@
 		</div>
 		<div id="divWords"></div>
 		
+		<!-- Needs to be imported first due to dependents. -->
+		<script src="serializer.js"></script>
+		<!-- Other imports. -->
 		<script src="words.js"></script>
-		<script src="game.js"></script>
 		<script src="render.js"></script>
 		<script src="solution.js"></script>
 		<script src="letter_circle.js"></script>
 		<script src="word_circle.js"></script>
+		<!-- Needs to be imported last due to dependencies. -->
+		<script src="game.js"></script>
 		<script type="text/javascript">
-			const DEBUG = false;
+			const DEBUG = true && window.location.href.startsWith("file:///");
 			
 			function log() {
 				if (DEBUG) {
@@ -65,18 +85,6 @@
 			
 			const SVG_NS = "http://www.w3.org/2000/svg";
 			
-			function newGame(prefixLength, suffixLength) {
-				let svgGame = document.getElementById("svgGame");
-				svgGame.setAttribute("width", WIDTH);
-				svgGame.setAttribute("height", HEIGHT);
-				
-				log(game);
-				render.updateGame(game);
-				
-				let txtInput = document.getElementById("txtInput");
-				txtInput.onkeydown = processInput;
-			}
-			
 			let render;
 			let game;
 			
@@ -95,25 +103,45 @@
 				
 				let txtInput = document.getElementById("txtInput");
 				txtInput.onkeydown = processInput;
+
+				let btnSave = document.getElementById("btnSave");
+				btnSave.onclick = saveGame;
+
+				let btnCopy = document.getElementById("btnCopy");
+				btnCopy.onclick = copySavedGame;
+				
+				let btnPaste = document.getElementById("btnPaste");
+				btnPaste.onclick = pasteSavedGame;
+
+				let btnLoad = document.getElementById("btnLoad");
+				btnLoad.onclick = loadGame;
 			}
 
 			const FLASH_COLOR_CORRECT = "LimeGreen";
+			const FLASH_COLOR_ALREADY_FOUND = "LemonChiffon";
 			const FLASH_COLOR_WRONG = "Tomato";
+
+			const PREVIOUS_SOLUTION_STATE_TO_FLASH_COLOR = new Map([
+				[Solution.NOT_EXIST, FLASH_COLOR_WRONG],
+				[Solution.NOT_FOUND, FLASH_COLOR_CORRECT],
+				[Solution.FOUND, FLASH_COLOR_ALREADY_FOUND],
+			]);
 			
 			function processInput(e) {
 				if (e.key == "Enter") {
 					let txtInput = document.getElementById("txtInput");
 					let word = sanitizeInput(txtInput.value);
 					if (word.length > 0) {
-						if (game.checkAndUpdate(word)) {
+						const previousState = game.getStateAndUpdate(word);
+						log("???", previousState, PREVIOUS_SOLUTION_STATE_TO_FLASH_COLOR.get(previousState));
+						if (previousState == Solution.NOT_FOUND) {
 							render.updateGame(game);
-							flashInput(FLASH_COLOR_CORRECT);
 							log("BIG winner: " + word);
 						} else {
-							flashInput(FLASH_COLOR_WRONG);
 							log("BIG loser: " + word);
 						}
 						txtInput.value = "";
+						flashInput(PREVIOUS_SOLUTION_STATE_TO_FLASH_COLOR.get(previousState));
 					}
 				}
 			}
@@ -146,6 +174,31 @@
 					txtInput.style.backgroundColor = flashOriginalColor;
 					flashTimeoutID = 0;
 				}, FLASH_DURATION_MS);
+			}
+
+			function saveGame() {
+				let txtSerializedGame = document.getElementById("txtSerializedGame");
+				txtSerializedGame.value = Game.serializer.serialize(game);;
+			}
+
+			function copySavedGame() {
+				let txtSerializedGame = document.getElementById("txtSerializedGame");
+				navigator.clipboard.writeText(txtSerializedGame.value);
+			}
+
+			function pasteSavedGame() {
+				navigator.clipboard.readText().then(data => {
+					let txtSerializedGame = document.getElementById("txtSerializedGame");
+					txtSerializedGame.value = data;
+				}).catch(error => {
+					log("failed to paste:", error);
+				});
+			}
+
+			function loadGame() {
+				let txtSerializedGame = document.getElementById("txtSerializedGame");
+				game = Game.serializer.deserialize(txtSerializedGame.value);
+				render.updateGame(game);
 			}
 		</script>
 	</body>
