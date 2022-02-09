@@ -1,8 +1,12 @@
 class Log {
 }
 
-Log._CONSOLE = false;
-Log._DOCUMENT = false;
+Log._isFileUri = function(uri) {
+    return uri.toLowerCase().startsWith("file:///");
+}
+
+Log._CONSOLE = true && Log._isFileUri(window.location.href);
+Log._DOCUMENT = false && Log._isFileUri(window.location.href);
 
 Log.divOutput = null;
 

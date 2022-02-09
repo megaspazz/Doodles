@@ -5,7 +5,9 @@ class Render {
         this.divResult = divResult;
     }
 
-    drawHints(game) {
+    drawHints(game, optionalGuess) {
+        const guess = optionalGuess || "";
+
         const [before, after] = Render._computeSpacing(game.hints);
         const width = before + game.solution.length + after;
         const emptyRow = Render._empty.repeat(width);
@@ -20,10 +22,35 @@ class Render {
                 }
                 buf[i][j + bufOffset] = c;
             }
+            const guessOffset = bufOffset + game.hints[i].offset;
+            for (const [j, c] of [...guess.substring(0, game.solution.length).toUpperCase()].entries()) {
+                // console.log(j, c);
+                buf[i][j + guessOffset] = c;
+            }
         }
-        Log.write(before, after);
-        Log.write(buf);
-        divHints.innerHTML = buf.map(row => row.join(Render._empty)).join("\n\n");
+        // Log.write(before, after);
+        // Log.write(buf);
+        divHints.innerHTML = buf.map(row => {
+            let divRow = document.createElement("div");
+            divRow.margin = "2px";
+            let spansForLetters = row.map((c, i) => {
+                let spanLetter = document.createElement("span");
+                if (before <= i && i < before + game.solution.length) {
+                    spanLetter.style.backgroundColor = "LightCyan";
+                    spanLetter.style.borderStyle = "solid";
+                }
+                spanLetter.style.display = "inline-block";
+                spanLetter.style.borderWidth = "1px";
+                spanLetter.style.padding = "4px";
+                spanLetter.style.margin = "4px";
+                spanLetter.innerHTML = c;
+                return spanLetter;
+            });
+            for (const spanLetter of spansForLetters) {
+                divRow.appendChild(spanLetter);
+            }
+            return divRow.outerHTML;
+        }).join("");
     }
 
     drawResult(game, guess) {
