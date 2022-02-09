@@ -24,12 +24,9 @@ class Render {
             }
             const guessOffset = bufOffset + game.hints[i].offset;
             for (const [j, c] of [...guess.substring(0, game.solution.length).toUpperCase()].entries()) {
-                // console.log(j, c);
                 buf[i][j + guessOffset] = c;
             }
         }
-        // Log.write(before, after);
-        // Log.write(buf);
         divHints.innerHTML = buf.map(row => {
             let divRow = document.createElement("div");
             divRow.margin = "2px";

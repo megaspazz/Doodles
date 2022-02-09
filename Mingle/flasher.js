@@ -9,7 +9,6 @@ class Flasher {
             clearTimeout(this.flashOnceTimeoutID);
         } else {
             for (const element of this.elementOriginalColors.keys()) {
-                console.log(element);
                 this.elementOriginalColors[element] = element.style.backgroundColor;
             }
         }

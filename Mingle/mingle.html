@@ -80,10 +80,6 @@
                 render.drawHints(game);
 
                 Log.write(document.getElementsByTagName("html")[0].innerHTML);
-
-                // document.onkeydown = function(e) {
-                //     Log.write(e.key, e.keyCode);
-                // }
             }
 
             function handleInput(e) {
@@ -106,17 +102,6 @@
                     setTimeout(() => {
                         render.drawHints(game, getTruncatedSanitizedInput());
                     }, 0);
-                    // Log.write("real before:", txtInput.value, txtInput.selectionStart, txtInput.selectionEnd);
-                    // let cursorStart = txtInput.selectionStart;
-                    // setTimeout(() => {
-                    //     let cursorEnd = txtInput.selectionEnd;
-                    //     let cursorPosition = [cursorStart, cursorEnd];
-                    //     Log.write("before:", txtInput.value, cursorPosition);
-                    //     let guess = sanitizeInput(txtInput.value, cursorPosition);
-                    //     Log.write("after:", guess, cursorPosition);
-                    //     txtInput.value = guess;
-                    //     txtInput.setSelectionRange(cursorPosition[0], cursorPosition[1]);
-                    // }, 0);
                 }
             }
 
@@ -165,7 +150,6 @@
                     }
                 }
                 return sb.join("");
-                // return [...guess.toUpperCase()].filter(c => isUpperAlpha(c)).join("");
             }
 
             function getTruncatedSanitizedInput() {
