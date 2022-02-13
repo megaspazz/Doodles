@@ -117,3 +117,8 @@ Game._firstMatch = function(games, filterFn) {
     }
     return null;
 }
+
+Game.serializer = new Serializer(
+    Game,
+    Hint,
+);

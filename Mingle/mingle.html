@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>M _ N G L E</h1>
-        <h6>version 0.0.42</h6>
+        <h6>version 0.0.43</h6>
         <div style="font-family: Helvetica, sans-serif;">
             <h2>Instructions</h2>
             <ul>
@@ -15,7 +15,12 @@
                 <li>Press the Enter key to submit your guess.</li>
                 <li>Click "Next Hint" to get another clue.</li>
                 <li>Refresh the page to play another puzzle.</li>
+                <li>If you liked this puzzle, copy the game URL to share it with your friends!</li>
             </ul>
+        </div>
+        <div style="margin: 24px;">
+            <input id="btnCopySaveGame" type="button" value="Copy Game URL"></input>
+            <input id="txtSaveGame" type="text" readonly></input>
         </div>
         <div id="divInput">
             <div>
@@ -24,16 +29,23 @@
             </div>
             <input id="btnHint" type="button" value="Next Hint"></input>
         </div>
+        <div id="divError" style="font-family: Helvetica, sans-serif; color: red; font-size: x-large;"></div>
         <div id="divHints" style="font-family: monospace; white-space: pre; margin: 12px;"></div>
-        <div id="divWinBanner" style="font-family: Helvetica, sans-serif; font-size: x-large; white-space: pre-wrap;"></div>
-        <div id="divResult" style="white-space: pre-wrap;"></div>
+        <div id="divWinBanner" style="font-family: Helvetica, sans-serif; font-size: x-large; white-space: pre;"></div>
+        <div id="divResult" style="white-space: pre;"></div>
 
+		<!-- Needs to be imported first due to dependents. -->
+        <script src="serializer.js" type="text/javascript"></script>
+		<!-- Other imports. -->
         <script src="flasher.js" type="text/javascript"></script>
-        <script src="game.js" type="text/javascript"></script>
         <script src="hint.js" type="text/javascript"></script>
         <script src="log.js" type="text/javascript"></script>
-        <script src="render.js" type="text/javascript"></script>
         <script src="words.js" type="text/javascript"></script>
+		<!-- Needs to be imported later due to dependencies. -->
+		<script src="game.js"></script>
+		<!-- Needs to be imported last due to dependencies. -->
+        <script src="render.js" type="text/javascript"></script>
+		<!-- Page script for running the game. -->
         <script type="text/javascript">
             let game;
             let render;
@@ -42,23 +54,48 @@
 			const FLASH_COLOR_WRONG_LENGTH = "Tomato";
 			const FLASH_DURATION_MS = 720;
 
+            const URL_PARAMS = new URLSearchParams(window.location.search);
+
             window.onload = function() {
                 Log.write("start");
 
-                game = Game.generate(g => {
-                    return g.hints.length >= 3;
-                });
-                game.shuffleHints();
-                // Coarsely sort by difficulty of hint.
-                // const score = (hint) => {
-                //     const before = hint.offset;
-                //     const after = hint.word.length - hint.offsetEnd();
-                //     return (before + 1) * (after + 1);
-                // };
-                // game.hints.sort((a, b) => {
-                //     return score(a) - score(b);
-                // });
-                Log.write(game);
+                let serializedGame = URL_PARAMS.get("game");
+                if (serializedGame) {
+                    try {
+                        game = Game.serializer.deserialize(serializedGame);
+                    } catch {
+                        const divError = document.getElementById("divError");
+                        divError.innerHTML = "Invalid game format, please double-check the URL.";
+                        disableInputs();
+                        return;
+                    }
+                } else {
+                    game = Game.generate(g => {
+                        return g.hints.length >= 3;
+                    });
+                    game.shuffleHints();
+                    // Coarsely sort by difficulty of hint.
+                    // const score = (hint) => {
+                    //     const before = hint.offset;
+                    //     const after = hint.word.length - hint.offsetEnd();
+                    //     return (before + 1) * (after + 1);                                                                       
+                    // };
+                    // game.hints.sort((a, b) => {
+                    //     return score(a) - score(b);
+                    // });
+                    Log.write(game);
+                }
+
+                const txtSaveGame = document.getElementById("txtSaveGame");
+                let url = new URL(window.location.href);
+                for (const k of url.searchParams.keys()) {
+                    url.searchParams.delete(k);
+                }
+                url.searchParams.set("game", Game.serializer.serialize(game));
+                txtSaveGame.value = url.toString();
+
+                const btnCopySaveGame = document.getElementById("btnCopySaveGame");
+                btnCopySaveGame.onclick = copySavedGame;
 
                 const divHints = document.getElementById("divHints");
                 const divWinBanner = document.getElementById("divWinBanner");
@@ -92,11 +129,9 @@
                         const txtInput = document.getElementById("txtInput");
                         const divInput = document.getElementById("divInput");
                         const divResult = document.getElementById("divResult");
-                        const btnHint = document.getElementById("btnHint");
                         render.drawResult(game, guess);
                         txtInput.value = guess;
-                        txtInput.disabled = true;
-                        btnHint.disabled = true;
+                        disableInputs();
                     }
                 } else {
                     setTimeout(() => {
@@ -113,6 +148,13 @@
                 }
                 render.drawHints(game, getTruncatedSanitizedInput());
                 focusInput();
+            }
+
+            function disableInputs() {
+                const txtInput = document.getElementById("txtInput");
+                const btnHint = document.getElementById("btnHint");
+                txtInput.disabled = true;
+                btnHint.disabled = true;
             }
 
             function focusInput() {
@@ -155,6 +197,11 @@
             function getTruncatedSanitizedInput() {
                 const txtInput = document.getElementById("txtInput");
                 return sanitizeInput(txtInput.value).substring(0, game.solution.length);
+            }
+
+            function copySavedGame() {
+                let txtSaveGame = document.getElementById("txtSaveGame");
+                navigator.clipboard.writeText(txtSaveGame.value);
             }
         </script>
     </body>
