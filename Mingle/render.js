@@ -77,6 +77,11 @@ class Render {
         Log.write(buf);
         this.divResult.innerHTML = buf.map(row => row.join("")).join("\n");
     }
+
+    clearResult() {
+        this.divWinBanner.innerHTML = "";
+        this.divResult.innerHTML = "";
+    }
 }
 
 Render._computeSpacing = function(hints) {

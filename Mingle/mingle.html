@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>M _ N G L E</h1>
-        <h6>version 0.0.43</h6>
+        <h6>version 0.0.44</h6>
         <div style="font-family: Helvetica, sans-serif;">
             <h2>Instructions</h2>
             <ul>
@@ -16,20 +16,25 @@
                 <li>Click "Next Hint" to get another clue.</li>
                 <li>Refresh the page to play another puzzle.</li>
                 <li>If you liked this puzzle, copy the game URL to share it with your friends!</li>
+                <li>To generate a puzzle with a given solution, type the desired solution in the box and click "Generate Game with Solution".</li>
             </ul>
         </div>
         <div style="margin: 24px;">
-            <input id="btnCopySaveGame" type="button" value="Copy Game URL"></input>
             <input id="txtSaveGame" type="text" readonly></input>
+            <input id="btnCopySaveGame" type="button" value="Copy Game URL"></input>
         </div>
-        <div id="divInput">
+        <div style="margin: 24px;">
+            <input id="txtSolution" type="text"></input>
+            <input id="btnGenerateGame" type="button" value="Generate Game with Solution"></input>
+        </div>
+        <div id="divError" style="font-family: Helvetica, sans-serif; color: red; font-size: x-large;"></div>
+        <div id="divInput" style="margin: 24px;">
             <div>
                 <label for="txtInput" style="font-family: Helvetica, sans-serif;"><strong>FINAL</strong> GUESS</label>
                 <input id="txtInput" type="text" autofocus></input>
             </div>
             <input id="btnHint" type="button" value="Next Hint"></input>
         </div>
-        <div id="divError" style="font-family: Helvetica, sans-serif; color: red; font-size: x-large;"></div>
         <div id="divHints" style="font-family: monospace; white-space: pre; margin: 12px;"></div>
         <div id="divWinBanner" style="font-family: Helvetica, sans-serif; font-size: x-large; white-space: pre;"></div>
         <div id="divResult" style="white-space: pre;"></div>
@@ -64,8 +69,7 @@
                     try {
                         game = Game.serializer.deserialize(serializedGame);
                     } catch {
-                        const divError = document.getElementById("divError");
-                        divError.innerHTML = "Invalid game format, please double-check the URL.";
+                        showError("Invalid game format, please double-check the URL.");
                         disableInputs();
                         return;
                     }
@@ -86,14 +90,6 @@
                     Log.write(game);
                 }
 
-                const txtSaveGame = document.getElementById("txtSaveGame");
-                let url = new URL(window.location.href);
-                for (const k of url.searchParams.keys()) {
-                    url.searchParams.delete(k);
-                }
-                url.searchParams.set("game", Game.serializer.serialize(game));
-                txtSaveGame.value = url.toString();
-
                 const btnCopySaveGame = document.getElementById("btnCopySaveGame");
                 btnCopySaveGame.onclick = copySavedGame;
 
@@ -110,13 +106,35 @@
 
                 const btnHint = document.getElementById("btnHint");
                 btnHint.onclick = nextHint;
+
+                const txtSolution = document.getElementById("txtSolution");
+                txtSolution.onkeydown = processSolutionInput;
+
+                const btnGenerateGame = document.getElementById("btnGenerateGame");
+                btnGenerateGame.onclick = generateGame;
                 
                 Log.write("events ready");
 
-                nextHint();
-                render.drawHints(game);
+                loadGame();
 
                 Log.write(document.getElementsByTagName("html")[0].innerHTML);
+            }
+
+            function loadGame(g) {
+                game = g || game;
+
+                const txtSaveGame = document.getElementById("txtSaveGame");
+                let url = new URL(window.location.href);
+                for (const k of url.searchParams.keys()) {
+                    url.searchParams.delete(k);
+                }
+                url.searchParams.set("game", Game.serializer.serialize(game));
+                txtSaveGame.value = url.toString();
+
+                nextHint();
+                render.clearResult();
+                render.drawHints(game);
+                enableInputs();
             }
 
             function handleInput(e) {
@@ -129,9 +147,9 @@
                         const txtInput = document.getElementById("txtInput");
                         const divInput = document.getElementById("divInput");
                         const divResult = document.getElementById("divResult");
-                        render.drawResult(game, guess);
                         txtInput.value = guess;
                         disableInputs();
+                        render.drawResult(game, guess);
                     }
                 } else {
                     setTimeout(() => {
@@ -150,11 +168,19 @@
                 focusInput();
             }
 
-            function disableInputs() {
+            function setInputDisabledState(isDisabled) {
                 const txtInput = document.getElementById("txtInput");
                 const btnHint = document.getElementById("btnHint");
-                txtInput.disabled = true;
-                btnHint.disabled = true;
+                txtInput.disabled = isDisabled;
+                btnHint.disabled = isDisabled;
+            }
+
+            function enableInputs() {
+                setInputDisabledState(false);
+            }
+
+            function disableInputs() {
+                setInputDisabledState(true);
             }
 
             function focusInput() {
@@ -202,6 +228,35 @@
             function copySavedGame() {
                 let txtSaveGame = document.getElementById("txtSaveGame");
                 navigator.clipboard.writeText(txtSaveGame.value);
+            }
+
+            function processSolutionInput(e) {
+                if (e.key == "Enter") {
+                    generateGame();
+                }
+            }
+
+            function generateGame() {
+                const txtSolution = document.getElementById("txtSolution");
+                const solution = sanitizeInput(txtSolution.value);
+                txtSolution.value = solution;
+                const g = Game.generateForSolution(solution)?.shuffleHints();
+                Log.write(g);
+                if (g) {
+                    clearError();
+                    loadGame(g);
+                } else {
+                    showError("No game with solution: " + solution);
+                }
+            }
+
+            function clearError() {
+                showError("");
+            }
+
+            function showError(errorText) {
+                const divError = document.getElementById("divError");
+                divError.innerHTML = errorText;
             }
         </script>
     </body>

@@ -11,6 +11,7 @@ class Game {
 
     shuffleHints() {
         Game._shuffle(this.hints);
+        return this;
     }
 
     _createFromTemplate() {
@@ -28,6 +29,10 @@ Game.generate = function(filterFn) {
 
 Game.generateForLength = function(length, filterFn) {
     return Game._firstMatch(Game._shuffle([...Game._getAllGamesByLength()[length]]), filterFn);
+}
+
+Game.generateForSolution = function(solution) {
+    return Game._getAllGamesBySolution().get(solution.toUpperCase())?._createFromTemplate();
 }
 
 Game.getRandomTemplate = function() {
@@ -98,6 +103,17 @@ Game._getAllGamesByLength = function() {
         }
     }
     return Game._allGamesByLength;
+}
+
+Game._allGamesBySolution = null;
+Game._getAllGamesBySolution = function() {
+    if (!Game._allGamesBySolution) {
+        Game._allGamesBySolution = new Map();
+        for (const game of Game._getAllGames()) {
+            Game._allGamesBySolution.set(game.solution, game);
+        }
+    }
+    return Game._allGamesBySolution;
 }
 
 Game._shuffle = function(arr) {
