@@ -138,6 +138,8 @@
             }
 
             function handleInput(e) {
+                console.log(e);
+                console.log("GUESS:", getTruncatedSanitizedInput(), sanitizeInput(e.target.value));
                 if (e.key === "Enter") {
                     const guess = getTruncatedSanitizedInput();
                     if (guess.length !== game.solution.length) {
@@ -154,7 +156,7 @@
                 } else {
                     setTimeout(() => {
                         render.drawHints(game, getTruncatedSanitizedInput());
-                    }, 0);
+                    }, 1);
                 }
             }
 
@@ -223,6 +225,10 @@
             function getTruncatedSanitizedInput() {
                 const txtInput = document.getElementById("txtInput");
                 return sanitizeInput(txtInput.value).substring(0, game.solution.length);
+            }
+
+            function truncate(s) {
+                return s.substring(0, game.solution.length);
             }
 
             function copySavedGame() {
